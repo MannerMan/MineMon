@@ -733,7 +733,8 @@ def unhax():
 
 def xp():
     if op_check():
-        send_task("xp 5000 " + name, 0)
+        for antal in range(0,4):
+            send_task("xp " + name + " 5000", 0.2)
         send_logg(c.SYSTEM, "XP 5000", name)
 
 def restart():
