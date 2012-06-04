@@ -355,6 +355,11 @@ def trigger():
         if enabled:
             hax()
 
+    elif "!xp" in lastLineFixed and not "CONSOLE" in lastLineFixed:
+        settings("!xp")
+        if enabled:
+            xp()
+
     elif "!unhax" in lastLineFixed and not "CONSOLE" in lastLineFixed:
         settings("!unhax")
         if enabled:
@@ -725,6 +730,11 @@ def unhax():
     if op_check():
         send_task("gamemode " + name + " 0", 0)
         send_logg(c.SYSTEM, "unhax", name)
+
+def hax():
+    if op_check():
+        send_task("xp 5000 " + name, 0)
+        send_logg(c.SYSTEM, "XP 5000", name)
 
 def restart():
     if op_check() or "CONSOLE" in lastLineFixed:
