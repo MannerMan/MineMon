@@ -731,7 +731,7 @@ def unhax():
         send_task("gamemode " + name + " 0", 0)
         send_logg(c.SYSTEM, "unhax", name)
 
-def hax():
+def xp():
     if op_check():
         send_task("xp 5000 " + name, 0)
         send_logg(c.SYSTEM, "XP 5000", name)
