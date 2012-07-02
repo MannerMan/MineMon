@@ -9,3 +9,6 @@ color = {   'SYSTEM': '\033[95m',
 
 def save(timestamp, c, command, name):
     print color[c] + timestamp.strftime("%H:%M:%S") + " | executing " + command + color["NAME"], "[ " + name + " ]"
+
+def save2(timestamp, c, command, name, fulhack, target):
+    print color[c] + timestamp.strftime("%H:%M:%S") + " | executing " + command + color["NAME"], "[ " + name, fulhack, target + " ]"

@@ -22,7 +22,7 @@ import include.logger as log
 #### code start ####
 
 #### version ####
-version = "3.0.0 alpha 2"
+version = "3.0.0 alpha 3"
 version = str(version)
 print "starting up MineMon "+version
 time.sleep(0.2)
@@ -38,28 +38,98 @@ mchost = config.get('config', 'rhost')
 mcport = config.get('config', 'rport')
 mcpwd = config.get('config', 'rpass')
 
+#### some settings-var ####
+mcpath = config.get('config', 'mcpath')
+mapurl = config.get('config', 'mapurl')
+helpurl = config.get('config', 'helpurl')
+
 #### announce that i'm running ####
 action.connect(mchost, mcport, mcpwd)
 action.say("Minecraft Monitor Version "+version+" now running!", 1)
 action.say("Type !help for available commands", 0)
 
-#### check if enabled func ####
+ops = action.load_op(mcpath)
+
+#### check if enabled & op func ####
 
 def enabled(onoroff):
-    setting = config.get('config', onoroff)
+    try:
+        setting = config.get('config', onoroff)
+    except:
+        setting = "disabled"
+        print "NO setting entry for "+onoroff+", disabled."
     if "enabled" in setting:
         return True
     else:
         action.say("This command has been disabled!", 0)
         return False
 
+def check_op(name):
+    if name.lower() in ops:
+        return True
+    else:
+        action.say("This command is not allowed for non-op's.", 0)
 
 #### Trigger on chattlog stuff ####
 def trigger(name):
-    if "!sheen" in lastLineFixed:
+    if "!sheen" in chatlog:
         if enabled("!sheen"):
             command.sheen()
             log.save(timestamp, "SYSTEM", "!sheen", name)
+
+    elif "!hax" in chatlog and not "CONSOLE" in chatlog:
+        if enabled("!hax"):
+            if check_op(name):
+                command.hax(name)
+                log.save(timestamp, "SYSTEM", "!hax", name)
+
+    elif "!unhax" in chatlog and not "CONSOLE" in chatlog:
+        if enabled("!unhax"):
+            if check_op(name):
+                command.unhax(name)
+                log.save(timestamp, "SYSTEM", "!unhax", name)
+
+    elif "!day" in chatlog:
+        if enabled("!day"):
+            command.day()
+            log.save(timestamp, "SYSTEM", "!day", name)
+
+    elif "!night" in chatlog:
+        if enabled("!night"):
+            command.night()
+            log.save(timestamp, "SYSTEM", "!night", name)
+
+    elif "!tp" in chatlog and not "CONSOLE" in chatlog:
+        if enabled("!tp"):
+            who = command.tp(name, chatlog)
+            log.save2(timestamp, "TEXT", "!tp", name, "] [ -> ] [", who)
+
+    elif "!pull" in chatlog and not "CONSOLE" in chatlog:
+        if enabled("!pull"):
+            who = command.pull(name, chatlog)
+            log.save2(timestamp, "TEXT", "!pull", name, "] [ <- ] [", who)
+
+    elif "!map" in chatlog:
+        if enabled("!map"):
+            command.map(mapurl)
+            log.save(timestamp, "SYSTEM", "!map", name)
+
+    elif "!help" in chatlog:
+        if enabled("!help"):
+            command.help(helpurl)
+            log.save(timestamp, "SYSTEM", "!help", name)
+
+    elif "!version" in chatlog:
+        action.say("Running MineMon version: " + version, 0)
+        log.save(timestamp, "SYSTEM", "!version", name)
+
+    elif "Opping" in chatlog or "De-opping" in chatlog:
+        global ops
+        ops = action.load_op(mcpath)
+        action.say("Detecting change in OP's, refreshing list!", 0)
+        log.save(timestamp, "SYSTEM", "OP-refresh", "SYSTEM")
+
+
 
 #### Name extractor
 def extract_name(player):
@@ -71,9 +141,9 @@ def extract_name(player):
 
 #### Mainloop ####
 def func_checkLastLine(lastLine):
-    global lastLineFixed
+    global chatlog
     global timestamp
-    lastLineFixed = lastLine.replace("\n", "")
+    chatlog = lastLine.replace("\n", "")
     timestamp = datetime.now()
     name = extract_name(lastLine)
     trigger(name)
@@ -90,7 +160,7 @@ def func_loop():
     tempList = fileList
     while running:
         time.sleep(0.5)
-        fileHandle = open(file, 'r')
+        fileHandle = open(logfile, 'r')
         newLines = fileHandle.readlines()
         if newLines != tempList and tempList != None:
             tempList = newLines
@@ -98,16 +168,16 @@ def func_loop():
             if len(newList) > 0: func_checkLastLine(newList[len(newList) - 1])
 
 def func_getLastLine():
-    fileHandle = open(file, 'r')
+    fileHandle = open(logfile, 'r')
     allLines = fileHandle.readlines()
     allLines = [item for item in allLines if item != '\n']
     return allLines[len(allLines) - 1]
 
 #### Start application
 running = True
-file = config.get('config', 'logpath')
+logfile = mcpath + "server.log"
 
-fileHandle = open(file, 'r')
+fileHandle = open(logfile, 'r')
 fileList = fileHandle.readlines()
 
 loopThread = newLoopingThread(1)
