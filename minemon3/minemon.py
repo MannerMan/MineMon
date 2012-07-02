@@ -15,11 +15,14 @@ import socket
 
 #my stuff will go here
 import include.action as action
+import include.logreader as logreader
+import include.command as command
+import include.logger as log
 
 #### code start ####
 
 #### version ####
-version = "3.0.0 alpha 1"
+version = "3.0.0 alpha 2"
 version = str(version)
 print "starting up MineMon "+version
 time.sleep(0.2)
@@ -40,15 +43,40 @@ action.connect(mchost, mcport, mcpwd)
 action.say("Minecraft Monitor Version "+version+" now running!", 1)
 action.say("Type !help for available commands", 0)
 
+#### check if enabled func ####
+
+def enabled(onoroff):
+    setting = config.get('config', onoroff)
+    if "enabled" in setting:
+        return True
+    else:
+        action.say("This command has been disabled!", 0)
+        return False
+
+
+#### Trigger on chattlog stuff ####
+def trigger(name):
+    if "!sheen" in lastLineFixed:
+        if enabled("!sheen"):
+            command.sheen()
+            log.save(timestamp, "SYSTEM", "!sheen", name)
+
+#### Name extractor
+def extract_name(player):
+    # extrahera namn
+    player = player[28:]
+    bort = '>'
+    player = player.split(bort, 1)[0]
+    return player
+
 #### Mainloop ####
 def func_checkLastLine(lastLine):
     global lastLineFixed
-    global stamp
-    global name
+    global timestamp
     lastLineFixed = lastLine.replace("\n", "")
-    stamp = datetime.now()
-    #extract_name(lastLine)
-    #trigger()
+    timestamp = datetime.now()
+    name = extract_name(lastLine)
+    trigger(name)
 
 #### start of S3rR1 hax, i dont even what is this ####
 class newLoopingThread (threading.Thread):
@@ -78,7 +106,7 @@ def func_getLastLine():
 #### Start application
 running = True
 file = config.get('config', 'logpath')
-        
+
 fileHandle = open(file, 'r')
 fileList = fileHandle.readlines()
 
