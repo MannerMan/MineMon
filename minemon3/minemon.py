@@ -22,7 +22,7 @@ import include.logger as log
 #### code start ####
 
 #### version ####
-version = "3.0.0 alpha 3"
+version = "3.0.0 alpha 4"
 version = str(version)
 print "starting up MineMon "+version
 time.sleep(0.2)
@@ -75,9 +75,19 @@ def trigger(name):
     if "!sheen" in chatlog:
         if enabled("!sheen"):
             command.sheen()
-            log.save(timestamp, "SYSTEM", "!sheen", name)
+            log.save(timestamp, "TEXT", "!sheen", name)
 
-    elif "!hax" in chatlog and not "CONSOLE" in chatlog:
+    elif "logged in with entity" in chatlog and not "CONSOLE" in chatlog:
+        if enabled("login_manner"):
+            player = command.login(chatlog)
+            log.save(timestamp, "GREEN", "Login:", player)
+
+    elif "lost connection:" in chatlog and not "CONSOLE" in chatlog:
+        if enabled("logout_manner"):
+            player = command.logout(chatlog)
+            log.save(timestamp, "RED", "Logout:", player)
+
+    elif "!hax" in chatlog and not "[Rcon]" in chatlog:
         if enabled("!hax"):
             if check_op(name):
                 command.hax(name)
@@ -123,11 +133,51 @@ def trigger(name):
         action.say("Running MineMon version: " + version, 0)
         log.save(timestamp, "SYSTEM", "!version", name)
 
+    elif "!list" in chatlog:
+        action.say("Deprecated. Press <tab>", 0)
+
+    elif "!roll" in chatlog and not "CONSOLE" in chatlog:
+        if enabled("!roll"):
+            roll = command.roll(name)
+            log.save2(timestamp, "TEXT", "!roll", name, "] [", roll)
+
+    elif "!rain" in chatlog and not "CONSOLE" in chatlog:
+        if enabled("!rain"):
+            command.rain()
+            log.save(timestamp, "SYSTEM", "!rain", name)
+
+    elif "!xp" in chatlog and not "CONSOLE" in chatlog:
+        if enabled("!xp"):
+            if check_op(name):
+                command.xp(name)
+                log.save(timestamp, "TEXT", "!xp", name)
+
+    elif "!kit" in chatlog and not "CONSOLE" in chatlog:
+        if enabled("!kit"):
+            command.kit(name)
+            log.save(timestamp, "TEXT", "!kit", name)
+
+    elif "!leatherset" in chatlog and not "CONSOLE" in chatlog:
+        if enabled("!leatherset"):
+            command.leatherset(name)
+            log.save(timestamp, "TEXT", "!leatherset", name)
+
+    elif "!diamondset" in chatlog and not "CONSOLE" in chatlog:
+        if enabled("!diamondset"):
+            if check_op(name):
+                command.diamondset(name)
+                log.save(timestamp, "TEXT", "!diamondset", name)
+
+
     elif "Opping" in chatlog or "De-opping" in chatlog:
         global ops
         ops = action.load_op(mcpath)
         action.say("Detecting change in OP's, refreshing list!", 0)
         log.save(timestamp, "SYSTEM", "OP-refresh", "SYSTEM")
+
+    #old non-supported commands
+    elif "!tnt" in chatlog:
+        action.say("Deprecated command. use !hax", 0)
 
 
 
