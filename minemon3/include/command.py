@@ -131,3 +131,32 @@ def diamondset(name):
         action.send("give " + name +" "+ str(item) + " 1", 0.1)
     action.send("give " + name + " 276 1", 0)
 
+def bow(name):
+    action.send("give " + name + " 261 1", 0)
+    for antal in range(0,3):
+        action.send("give " + name + " 262 64", 0.1)
+
+def train(name):
+    action.send("give " + name + " 328 5", 0.1)
+    action.send("tell " + name + " Do _NOT_ leave empty trains on the rail!", 0)
+
+def sleep(name):
+    action.send("give " + name + " 355 5 ", 0)
+
+def rail(name):
+    for antal in range(0,4):
+        action.send("give " + name + " 27 64", 0.1)
+    for antal in range(0,2):
+        action.send("give " + name + " 28 64", 0.1)
+
+def food(name):
+    for antal in range(0,5):
+        action.send("give " + name + " 363 64", 0.1)
+
+def item(name, chatlog):
+    item = chatlog
+    item = item[28:]
+    item = item.split("!item ")[-1]
+    item = item.replace("\n", "")
+    action.send("give " + name +" "+ item +" 64", 0)
+    return item

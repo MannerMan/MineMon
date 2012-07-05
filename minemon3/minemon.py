@@ -22,7 +22,7 @@ import include.logger as log
 #### code start ####
 
 #### version ####
-version = "3.0.0 alpha 4"
+version = "3.0.0 alpha 5"
 version = str(version)
 print "starting up MineMon "+version
 time.sleep(0.2)
@@ -116,8 +116,9 @@ def trigger(name):
 
     elif "!pull" in chatlog and not "CONSOLE" in chatlog:
         if enabled("!pull"):
-            who = command.pull(name, chatlog)
-            log.save2(timestamp, "TEXT", "!pull", name, "] [ <- ] [", who)
+            if check_op(name):
+                who = command.pull(name, chatlog)
+                log.save2(timestamp, "TEXT", "!pull", name, "] [ <- ] [", who)
 
     elif "!map" in chatlog:
         if enabled("!map"):
@@ -168,6 +169,53 @@ def trigger(name):
                 command.diamondset(name)
                 log.save(timestamp, "TEXT", "!diamondset", name)
 
+    elif "!bow" in chatlog and not "CONSOLE" in chatlog:
+        if enabled("!bow"):
+            command.bow(name)
+            log.save(timestamp, "TEXT", "!bow", name)
+
+    elif "!train" in chatlog and not "CONSOLE" in chatlog:
+        if enabled("!train"):
+            command.train(name)
+            log.save(timestamp, "TEXT", "!train", name)
+
+    elif "!sleep" in chatlog and not "CONSOLE" in chatlog:
+        if enabled("!sleep"):
+            command.sleep(name)
+            log.save(timestamp, "TEXT", "!sleep", name)
+
+    elif "!rail" in chatlog and not "CONSOLE" in chatlog:
+        if enabled("!rail"):
+            command.rail(name)
+            log.save(timestamp, "TEXT", "!rail", name)
+
+    elif "!food" in chatlog and not "CONSOLE" in chatlog:
+        if enabled("!food"):
+            command.food(name)
+            log.save(timestamp, "TEXT", "!food", name)
+
+    elif "!item" in chatlog and not "CONSOLE" in chatlog:
+        if enabled("!item"):
+            if check_op(name):
+                item = command.item(name, chatlog)
+                log.save2(timestamp, "TEXT", "!item", name, "] [", item)
+
+    elif "!restart" in chatlog:
+        action.say("not implemented yet", 0)
+
+    elif "!monsters" in chatlog:
+        action.say("not implemented yet", 0)
+
+    elif "!update" in chatlog:
+        action.say("not implemented yet", 0)
+
+    elif "!temphax" in chatlog and not "CONSOLE" in chatlog:
+        action.say("not implemented yet", 0)
+
+    elif "!report" in chatlog and not "CONSOLE" in chatlog:
+        action.say("not implemented yet", 0)
+
+
 
     elif "Opping" in chatlog or "De-opping" in chatlog:
         global ops
@@ -176,7 +224,7 @@ def trigger(name):
         log.save(timestamp, "SYSTEM", "OP-refresh", "SYSTEM")
 
     #old non-supported commands
-    elif "!tnt" in chatlog:
+    elif "!tnt" in chatlog or "!stone" in chatlog or "!wood" in chatlog or "!dirt" in chatlog:
         action.say("Deprecated command. use !hax", 0)
 
 
