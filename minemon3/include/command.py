@@ -1,12 +1,14 @@
 import action
 import random
-
-#### Random vars ####
-sheenstuff = ["Winning", "Bi-winning", "Win Win everywhere", "Your face will melt off!", "Whats not to love?", "Epic Winning!", "Win here, win there, win everywhere!", "Absolute victory!", "That's how I roll", "No pants? - Winning!", "Duuh, WINNING! WINNING!", "The only thing Im addicted to right now is winning."]
+import os
+import filecmp
+import sys
+import time
 
 #### Actual commands ####
 
 def sheen():
+    sheenstuff = ["Winning", "Bi-winning", "Win Win everywhere", "Your face will melt off!", "Whats not to love?", "Epic Winning!", "Win here, win there, win everywhere!", "Absolute victory!", "That's how I roll", "No pants? - Winning!", "Duuh, WINNING! WINNING!", "The only thing Im addicted to right now is winning."]
     win = random.randint(0, 11)
     bro = (sheenstuff[win])
     action.say(bro, 0)
@@ -160,3 +162,108 @@ def item(name, chatlog):
     item = item.replace("\n", "")
     action.send("give " + name +" "+ item +" 64", 0)
     return item
+
+def restart():
+    #stop
+    action.say("[Warning] Server restarting in 10 seconds!", 5)
+    action.say("[Warning] Server restarting in 5 seconds!", 5)
+    action.send("save-all", 2)
+    action.stop_server()
+
+    #start
+    #yeah this is hard though rcon >.<
+    action.start_server()
+
+def mail(name, chatlog):
+        issue = chatlog
+        issue = issue[28:]
+        issue = issue.split("> !report")[-1]
+        issue = issue.replace("\n", "")
+        issue = "[ "+name+" ] "+issue
+        action.mail(issue)
+        action.say("Problem was reported to the administrator!", 0)
+
+def monsters(path):
+    #real and tempfile
+    properties = path + "server.properties"
+    mc_out = "/tmp/tempsett.txt"
+
+    #open them
+    mc_settings = open(properties, "r")
+    mc_out = open(mc_out, "w")
+
+    # loop through the test file line by line
+    # and write only the lines back out that do
+    # not contain the search string
+    search = "spawn-monsters="
+    for line in mc_settings:
+        if search not in line:
+            mc_out.write(line)
+        else:
+            print "found monsters line!"
+            if "False" in line:
+                action.say("[Warning] Turning monsters ON!", 2)
+                action.say("[Warning] Monsters will appear in the next night cycle.", 3)
+                action.stop_server()
+                mc_out.write("spawn-monsters=True\n")
+                return "ON"
+            if "True" in line:
+                action.say("[Warning] Turning monsters OFF!", 2)
+                action.say("[Warning] Monsters will stop spawning.", 3)
+                action.stop_server()
+                mc_out.write("spawn-monsters=False\n")
+                return "OFF"
+            action.send_sys("rm " + properties, 0)
+            action.send_sys("mv /tmp/tempsett.txt " + properties, 0)
+            time.sleep(1)
+            action.start_server()
+
+    # close the file handles
+    mc_settings.close()
+    mc_out.close()
+
+def update(path, port):
+    action.say("Downloading minecraft_server...", 0)
+
+    #remove any old leftovers
+    action.send_sys("rm /tmp/"+port+"/minecraft_server.jar", 1)
+
+    #download latest version
+    action.send_sys("wget -b --directory-prefix=/tmp/"+port+"/ https://s3.amazonaws.com/MinecraftDownload/launcher/minecraft_server.jar", 5)
+    action.say("Done, comparing versions..", 0.5)
+    server = path + "minecraft_server.jar"
+
+    #compare with current
+    compare = filecmp.cmp('/tmp/'+port+'/minecraft_server.jar', server)
+
+    #if no difference do nothing
+    if compare == True:
+        action.say("Latest version installed", 1)
+        action.say("- Doing nothing.", 1)
+        return "No update found"
+
+    #else shutdown and update
+    else:
+        action.say("Versions does not match!", 3)
+        action.say("Im going to try something crazy and update myself!", 4)
+        action.say("Dont be mad if shit goes bad :3", 2)
+        action.stop_server()
+        action.send_sys("rm "+ server, 1)
+        action.send_sys("mv /tmp/"+port+"/minecraft_server.jar "+ server, 1)
+        action.start_server()
+        return "Updated server!"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

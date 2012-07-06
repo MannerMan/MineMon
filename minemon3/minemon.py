@@ -22,7 +22,7 @@ import include.logger as log
 #### code start ####
 
 #### version ####
-version = "3.0.0 alpha 5"
+version = "3.0.0 alpha 6"
 version = str(version)
 print "starting up MineMon "+version
 time.sleep(0.2)
@@ -42,9 +42,15 @@ mcpwd = config.get('config', 'rpass')
 mcpath = config.get('config', 'mcpath')
 mapurl = config.get('config', 'mapurl')
 helpurl = config.get('config', 'helpurl')
+screen = config.get('config', 'screen')
+
+gmail = config.get('config', 'gmail')
+gpw = config.get('config', 'gmailpw')
+mailrcvr = config.get('config', 'sendto')
 
 #### announce that i'm running ####
 action.connect(mchost, mcport, mcpwd)
+action.load(gmail, gpw, mailrcvr, screen)
 action.say("Minecraft Monitor Version "+version+" now running!", 1)
 action.say("Type !help for available commands", 0)
 
@@ -200,20 +206,31 @@ def trigger(name):
                 item = command.item(name, chatlog)
                 log.save2(timestamp, "TEXT", "!item", name, "] [", item)
 
-    elif "!restart" in chatlog:
-        action.say("not implemented yet", 0)
+    elif "!restart" in chatlog and not "CONSOLE" in chatlog:
+        if enabled("!restart"):
+            if check_op(name):
+                command.restart()
+                log.save(timestamp, "SYSTEM", "!restart", name)
 
     elif "!monsters" in chatlog:
-        action.say("not implemented yet", 0)
+        if enabled("!monsters"):
+            if check_op(name):
+                onoff = command.monsters(mcpath)
+                log.save2(timestamp, "SYSTEM", "!monsters", name, "] [", onoff)
 
     elif "!update" in chatlog:
-        action.say("not implemented yet", 0)
+        if enabled("!update"):
+            if check_op(name) or "CONSOLE" in chatlog:
+                status = command.update(mcpath, mcport)
+                log.save2(timestamp, "SYSTEM", "!update", name, "] [", status)
 
     elif "!temphax" in chatlog and not "CONSOLE" in chatlog:
-        action.say("not implemented yet", 0)
+        action.say("not implemented yet gogo MYSQL", 0)
 
     elif "!report" in chatlog and not "CONSOLE" in chatlog:
-        action.say("not implemented yet", 0)
+        if enabled("!report"):
+            command.mail(name, chatlog)
+            log.save(timestamp, "SYSTEM", "!report", name)
 
 
 

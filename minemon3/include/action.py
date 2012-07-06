@@ -4,10 +4,43 @@ import select
 import struct
 import re
 import time
+import smtplib
+from email.mime.text import MIMEText
+import os
+import sys
+
+def load(mail, pw, sendto, screen):
+    print screen
+    global scrn
+    global gmail
+    global gpw
+    global rcvr
+
+    scrn = screen
+    gmail = mail
+    gpw = pw
+    rcvr = sendto
+
+def mail(mailmsg):
+    msg = MIMEText(mailmsg)
+    msg['Subject'] = 'MineMon problemreport'
+    msg['From'] = "MineMon3"
+    msg['Reply-to'] = "donotreply"
+    msg['To'] = "Admin"
+
+    server = smtplib.SMTP('smtp.gmail.com',587) #port 465 or 587
+    server.ehlo()
+    server.starttls()
+    server.ehlo()
+    #fix config-settings here.
+    server.login(gmail,gpw)
+    server.sendmail(gmail,rcvr,msg.as_string())
+    server.close()
 
 def connect(host, port, pwd):
     global r
     r = MCRcon(host, int(port), pwd)
+
 def say(msg, wait):
     r.send("say "+msg)
     time.sleep(int(wait))
@@ -23,6 +56,25 @@ def load_op(mcpath):
     return ops
     #print ops
 
+def send_sys(command, time):
+    if time == 0:
+        execute = command
+    else:
+        execute = command + " ; sleep " + str(time)
+    try:
+        os.system(execute)
+    except:
+        print "Exection of "+execute+" failed."
+
+def send_task(task, time):
+    os.system("screen -S "+ scrn +" -p 0 -X stuff \"`printf \""+ task +" \r\"`\"; sleep "+ str(time))
+
+def stop_server():
+    send_task("stop", 5)
+
+def start_server():
+    time.sleep(2)
+    send_task("java -Xmx700M -Xms700M -jar minecraft_server.jar nogui", 0)
 
 class MCRcon:
     def __init__(self, host, port, password):
