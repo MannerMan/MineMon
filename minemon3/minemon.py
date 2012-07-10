@@ -240,6 +240,11 @@ def trigger(name):
         action.say("Detecting change in OP's, refreshing list!", 0)
         log.save(timestamp, "SYSTEM", "OP-refresh", "SYSTEM")
 
+    elif "[INFO] Done (" in chatlog or "[INFO] RCON running on" in chatlog:
+	pass
+	#print "detected mcstart, connection to rcon"
+	#action.connect(mchost, mcport, mcpwd)
+
     #old non-supported commands
     elif "!tnt" in chatlog or "!stone" in chatlog or "!wood" in chatlog or "!dirt" in chatlog:
         action.say("Deprecated command. use !hax", 0)

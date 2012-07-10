@@ -201,13 +201,14 @@ def monsters(path):
             mc_out.write(line)
         else:
             print "found monsters line!"
-            if "False" in line:
+            print line
+            if "false" in line:
                 action.say("[Warning] Turning monsters ON!", 2)
                 action.say("[Warning] Monsters will appear in the next night cycle.", 3)
                 action.stop_server()
                 mc_out.write("spawn-monsters=True\n")
                 return "ON"
-            if "True" in line:
+            if "true" in line:
                 action.say("[Warning] Turning monsters OFF!", 2)
                 action.say("[Warning] Monsters will stop spawning.", 3)
                 action.stop_server()
@@ -229,12 +230,13 @@ def update(path, port):
     action.send_sys("rm /tmp/"+port+"/minecraft_server.jar", 1)
 
     #download latest version
-    action.send_sys("wget -b --directory-prefix=/tmp/"+port+"/ https://s3.amazonaws.com/MinecraftDownload/launcher/minecraft_server.jar", 5)
+    action.send_sys("wget -b --directory-prefix=/tmp/"+port+"/ https://s3.amazonaws.com/MinecraftDownload/launcher/minecraft_server.jar", 10)
     action.say("Done, comparing versions..", 0.5)
     server = path + "minecraft_server.jar"
 
     #compare with current
-    compare = filecmp.cmp('/tmp/'+port+'/minecraft_server.jar', server)
+    compare = filecmp.cmp("/tmp/"+port+"/minecraft_server.jar", server)
+    print "comparing " + '/tmp/'+port+'/minecraft_server.jar' + " with " + server
 
     #if no difference do nothing
     if compare == True:
@@ -252,7 +254,6 @@ def update(path, port):
         action.send_sys("mv /tmp/"+port+"/minecraft_server.jar "+ server, 1)
         action.start_server()
         return "Updated server!"
-
 
 
 

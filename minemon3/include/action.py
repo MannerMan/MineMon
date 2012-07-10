@@ -39,6 +39,13 @@ def mail(mailmsg):
 
 def connect(host, port, pwd):
     global r
+    global rhost
+    global rport
+    global rpwd
+
+    rhost = host
+    rport = port
+    rpwd = pwd
     r = MCRcon(host, int(port), pwd)
 
 def say(msg, wait):
@@ -86,7 +93,12 @@ class MCRcon:
         self.s.close()
 
     def send(self, command):
-        return self.send_real(2, command)
+	try:
+            return self.send_real(2, command)
+	except:
+	    connect(rhost, rport, rpwd)
+	    time.sleep(1)
+	    return self.send_real(2, command)
 
     def send_real(self, out_type, out_data):
         #Send the data
@@ -94,7 +106,11 @@ class MCRcon:
             10+len(out_data),
             0,
             out_type) + out_data + "\x00\x00"
-        self.s.send(buff)
+	try:
+            self.s.send(buff)
+	except:
+	    #SKRIV RECONNECT here
+        #worx need doin
 
         #Receive a response
         in_data = ''
