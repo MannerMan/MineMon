@@ -106,11 +106,12 @@ class MCRcon:
             10+len(out_data),
             0,
             out_type) + out_data + "\x00\x00"
-	try:
+        try:
             self.s.send(buff)
-	except:
-	    #SKRIV RECONNECT here
-        #worx need doin
+        except:
+            print "ERROR: COULD NOT SEND RCON DATA!"
+    	    #SKRIV RECONNECT here
+            #worx need doin
 
         #Receive a response
         in_data = ''

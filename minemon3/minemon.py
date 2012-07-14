@@ -20,9 +20,10 @@ import include.command as command
 import include.logger as log
 
 #### code start ####
+legit = True
 
 #### version ####
-version = "3.0.0 alpha 6"
+version = "3.0.0 alpha 8"
 version = str(version)
 print "starting up MineMon "+version
 time.sleep(0.2)
@@ -200,7 +201,7 @@ def trigger(name):
             command.food(name)
             log.save(timestamp, "TEXT", "!food", name)
 
-    elif "!item" in chatlog and not "CONSOLE" in chatlog:
+    elif "!item" in chatlog and not "[Rcon]" in chatlog:
         if enabled("!item"):
             if check_op(name):
                 item = command.item(name, chatlog)
@@ -241,13 +242,16 @@ def trigger(name):
         log.save(timestamp, "SYSTEM", "OP-refresh", "SYSTEM")
 
     elif "[INFO] Done (" in chatlog or "[INFO] RCON running on" in chatlog:
-	pass
-	#print "detected mcstart, connection to rcon"
-	#action.connect(mchost, mcport, mcpwd)
+        print "< STARTING SERVER > - Reconnecting to rcon"
+        action.connect(mchost, mcport, mcpwd)
+
+    elif "[INFO] Saving chunks" in chatlog:
+        print "< STOPPING SERVER >"
+
 
     #old non-supported commands
     elif "!tnt" in chatlog or "!stone" in chatlog or "!wood" in chatlog or "!dirt" in chatlog:
-        action.say("Deprecated command. use !hax", 0)
+        action.say("Deprecated command. use !hax or !item", 0)
 
 
 
