@@ -9,6 +9,7 @@ from email.mime.text import MIMEText
 import os
 import sys
 
+
 def load(mail, pw, sendto, screen):
     print screen
     global scrn

@@ -4,6 +4,12 @@ import os
 import filecmp
 import sys
 import time
+import database
+import thread
+import threading
+
+mysql = database.insert()
+dbtemphax = database.temphax()
 
 #### Actual commands ####
 
@@ -36,6 +42,11 @@ def login(chatlog):
 
     #greet and return nick
     action.say(hail + name + "! Online: " + online, 0)
+    mysql.login(name)
+    
+    #check if user was temphaxed
+    temphax_check(name)
+    
     return name
 
 def logout(chatlog):
@@ -48,6 +59,7 @@ def logout(chatlog):
 
     #say goodbye & return nick for logg
     action.say("Goodbye " + name + " !", 0)
+    mysql.logout(name)
     return name
 
 def hax(name):
@@ -254,14 +266,79 @@ def update(path, port):
         action.send_sys("mv /tmp/"+port+"/minecraft_server.jar "+ server, 1)
         action.start_server()
         return "Updated server!"
+    
+def temphax(chatlog):
+    
+    #extract target
+    who = chatlog
+    who = who[28:]
+    who = who.split("> !temphax")[-1]
+    who = who.replace("\n", "")
+    
+    #if no target notify
+    if who == "":
+        action.say("Need a target!", 0)
+        return "No target"
+    #else hax target and add to templist
+    else:
+        who = who.split(" ")[-1]
+        action.send("gamemode " + who + " 1", 0)
+        action.say(who+" is now haxed for this session.", 0)
+        #templist here
+        dbtemphax.add(who)
+        return who
+    
+def temphax_check(name):
+    #ask mysql if name exists in the temphax list
+    result = dbtemphax.check(name)
+    if not result:
+        #user was not temphaxed, do nothing.
+        pass
+    else:
+        #treading this, takes some time
+        #making name global, somewhat temp
+        global tempname
+        tempname = name
+        haxThread = unhaxThread(2)
+        haxThread.start()
+        
+def temphax_unhax(name):
+    action.say("[Warning] " + name + " is NOT authed for this session!", 4)
+    action.say(name + " - You will be un-haxed!", 3)
+    action.say(name + " - You have 10 seconds to get to safety!", 5)
+    action.say(name + " - You have 5 seconds to get to safety!", 5)
+    status = action.send("gamemode " + name + " 0", 0)
+    if "Can't find user" in status:
+        action.say(name+" left during de-hax, temphax-list was restored.", 0)
+        #just gonna print something here for now, should return and logg instead
+        print "TEMPHAX: "+name+" left during unhax, and list was untouched."
+    else:
+        action.say(name + " was un-haxed", 0.1)
+        dbtemphax.remove(name)
+        #just gonna print something here for now, should return and logg instead
+        print "TEMPHAX: unhaxed "+name
+        
+#this is beeing called every 5 minutes for playtime tracking
+def playtime():
+    #check who's online
+    online = action.send("list", 0.1)
+    online = online.split("Connected players: ")[-1]
+    online = online.split()
+    if not online:
+        pass
+        #print "NO USERS ONLINE"
+    else:
+        for user in online:
+            mysql.playtime(user)
 
-
-
-
-
-
-
-
+#this thread runs "temphax-unhaxing" so MM can function normal during this process.
+class unhaxThread (threading.Thread):
+    def __init__(self, threadID):
+        self.threadID = threadID
+        threading.Thread.__init__(self)
+    def run(self):
+        global tempname
+        temphax_unhax(tempname)
 
 
 

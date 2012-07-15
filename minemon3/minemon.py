@@ -18,12 +18,14 @@ import include.action as action
 import include.logreader as logreader
 import include.command as command
 import include.logger as log
+import include.database as database
+import include.timetrack as timetrack
 
 #### code start ####
 legit = True
 
 #### version ####
-version = "3.0.0 alpha 8"
+version = "3.0.0 beta 1"
 version = str(version)
 print "starting up MineMon "+version
 time.sleep(0.2)
@@ -34,10 +36,17 @@ setting_file = sys.argv[1]
 config = ConfigParser.RawConfigParser()
 config.read(setting_file)
 
-#### Connect to MC rcon ###
+#### Connect to MC rcon ####
 mchost = config.get('config', 'rhost')
 mcport = config.get('config', 'rport')
 mcpwd = config.get('config', 'rpass')
+
+#### Connect to MySQL ####
+myhost = config.get('config', 'mysqlhost')
+myuser = config.get('config', 'mysqluser')
+mypass = config.get('config', 'mysqlpass')
+mydb = config.get('config', 'mysqldb')
+database.settings(myhost, myuser, mypass, mydb)
 
 #### some settings-var ####
 mcpath = config.get('config', 'mcpath')
@@ -56,6 +65,7 @@ action.say("Minecraft Monitor Version "+version+" now running!", 1)
 action.say("Type !help for available commands", 0)
 
 ops = action.load_op(mcpath)
+timetrk=timetrack.playtime()
 
 #### check if enabled & op func ####
 
@@ -226,7 +236,10 @@ def trigger(name):
                 log.save2(timestamp, "SYSTEM", "!update", name, "] [", status)
 
     elif "!temphax" in chatlog and not "CONSOLE" in chatlog:
-        action.say("not implemented yet gogo MYSQL", 0)
+        if enabled("!temphax"):
+            if check_op(name):
+                who = command.temphax(chatlog)
+                log.save2(timestamp, "SYSTEM", "!temphax", name, "] -> [", who)
 
     elif "!report" in chatlog and not "CONSOLE" in chatlog:
         if enabled("!report"):
@@ -307,6 +320,10 @@ fileList = fileHandle.readlines()
 loopThread = newLoopingThread(1)
 loopThread.start()
 
+if enabled("timetrack"):
+    print "Timetracking enabled, starting timer"
+    timetrk.start()
+
 
 #### exit ####
 print "press any key to exit"
@@ -314,6 +331,11 @@ raw_input()
 running = False
 print "Waiting for looping thread to stop..."
 while loopThread.isAlive(): time.sleep(0.5)
+
+if enabled("timetrack"):
+    timetrk.stop()
+    time.sleep(1)
+    
 action.say("Minecraft Monitor Version "+version+" stopped!", 0)
 
 #lol = action.send("list")
