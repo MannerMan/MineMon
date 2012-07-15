@@ -19,7 +19,7 @@ def sheen():
     bro = (sheenstuff[win])
     action.say(bro, 0)
 
-def login(chatlog):
+def login(chatlog, version, helpurl):
 
     #get nick
     name = chatlog
@@ -42,7 +42,15 @@ def login(chatlog):
 
     #greet and return nick
     action.say(hail + name + "! Online: " + online, 0)
-    mysql.login(name)
+    mysql.login(name, version)
+    
+    #check if a new MM version was deployed since last visit.
+    vermatch = mysql.version(name, version)
+    if vermatch:
+        time.sleep(1)
+        action.send("tell "+name+" A new version of MineMon was deployed since your last visit!", 2)
+        action.send("tell "+name+" Please see "+helpurl+" for changelog", 0.2)
+        mysql.upd_version(name, version)
     
     #check if user was temphaxed
     temphax_check(name)
@@ -317,6 +325,10 @@ def temphax_unhax(name):
         dbtemphax.remove(name)
         #just gonna print something here for now, should return and logg instead
         print "TEMPHAX: unhaxed "+name
+        
+def played(name):
+    amount = mysql.played(name)
+    action.say(name +" has played "+amount+" on this server.", 0)
         
 #this is beeing called every 5 minutes for playtime tracking
 def playtime():

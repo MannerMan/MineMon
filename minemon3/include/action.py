@@ -54,8 +54,9 @@ def say(msg, wait):
     time.sleep(int(wait))
 
 def send(command, wait):
-    return r.send(command)
-    time.sleep(int(wait))
+    status = r.send(command)
+    time.sleep(wait)
+    return status
 
 def load_op(mcpath):
     opath = mcpath + 'ops.txt'

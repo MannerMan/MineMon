@@ -25,7 +25,7 @@ import include.timetrack as timetrack
 legit = True
 
 #### version ####
-version = "3.0.0 beta 1"
+version = "3.0.0 beta 2"
 version = str(version)
 print "starting up MineMon "+version
 time.sleep(0.2)
@@ -96,7 +96,7 @@ def trigger(name):
 
     elif "logged in with entity" in chatlog and not "CONSOLE" in chatlog:
         if enabled("login_manner"):
-            player = command.login(chatlog)
+            player = command.login(chatlog, version, helpurl)
             log.save(timestamp, "GREEN", "Login:", player)
 
     elif "lost connection:" in chatlog and not "CONSOLE" in chatlog:
@@ -239,12 +239,17 @@ def trigger(name):
         if enabled("!temphax"):
             if check_op(name):
                 who = command.temphax(chatlog)
-                log.save2(timestamp, "SYSTEM", "!temphax", name, "] -> [", who)
+                log.save2(timestamp, "TEXT", "!temphax", name, "] -> [", who)
 
     elif "!report" in chatlog and not "CONSOLE" in chatlog:
         if enabled("!report"):
             command.mail(name, chatlog)
             log.save(timestamp, "SYSTEM", "!report", name)
+            
+    elif "!played" in chatlog and not "CONSOLE" in chatlog:
+        if enabled("!played"):
+            command.played(name)
+            log.save(timestamp, "TEXT", "!played", name)
 
 
 

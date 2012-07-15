@@ -44,8 +44,20 @@ class database():
 data = database()
     
 class insert():
+    
+    def upd_version(self, name, version):
+        mydb.query("""UPDATE `"""+db+"""`.`users` SET `version` = '"""+version+"""' WHERE `users`.`name` ='"""+name+"';")
+    
+    def version(self, name, version):
+        versioncheck = mydb.query("""SELECT u.version FROM """+db+""".users u WHERE u.name = """ + "\'"+name+"\'")
+        versioncheck = versioncheck.fetch_row(0, 1)
+        versioncheck = versioncheck[0]["version"]
+        if versioncheck == version:
+            return False
+        else:
+            return True
 
-    def login(self, name):
+    def login(self, name, version):
         
         #check if user exists
         mysqldata=mydb.query("""SELECT m.name, m.played, m.id FROM users m WHERE m.name = """ + "\'"+name+"\'")
@@ -54,7 +66,7 @@ class insert():
         #if not, add user
         if not user:
             print "Adding new user to database"
-            mydb.query("""INSERT INTO `"""+db+"""`.`users` (`name`, `id`, `played`, `online`, `last_online`) VALUES ('"""+name+"""', NULL, '00:00:00', '1',CURRENT_TIMESTAMP);""")
+            mydb.query("""INSERT INTO `"""+db+"""`.`users` (`name`, `id`, `played`, `online`, `last_online`, `version`) VALUES ('"""+name+"""', NULL, '00:00:00', '1',CURRENT_TIMESTAMP,'"""+version+"');")
             
         #if they do exist, update online and last_online
         else:
@@ -73,6 +85,11 @@ class insert():
         except:
             print "impossiblu to add playtime to user "+name
             
+    def played(self, name):
+        playtime = mydb.query("""SELECT u.played FROM users u WHERE u.name='"""+name+"'")
+        playtime = playtime.fetch_row(0, 1)
+        playtime = playtime[0]["played"]
+        return playtime
             
 class temphax():
     
