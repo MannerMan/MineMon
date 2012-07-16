@@ -25,7 +25,7 @@ import include.timetrack as timetrack
 legit = True
 
 #### version ####
-version = "3.0.0 beta 2"
+version = "3.0.0 beta 3"
 version = str(version)
 print "starting up MineMon "+version
 time.sleep(0.2)
@@ -245,13 +245,11 @@ def trigger(name):
         if enabled("!report"):
             command.mail(name, chatlog)
             log.save(timestamp, "SYSTEM", "!report", name)
-            
+
     elif "!played" in chatlog and not "CONSOLE" in chatlog:
         if enabled("!played"):
             command.played(name)
             log.save(timestamp, "TEXT", "!played", name)
-
-
 
     elif "Opping" in chatlog or "De-opping" in chatlog:
         global ops
@@ -266,10 +264,13 @@ def trigger(name):
     elif "[INFO] Saving chunks" in chatlog:
         print "< STOPPING SERVER >"
 
-
     #old non-supported commands
     elif "!tnt" in chatlog or "!stone" in chatlog or "!wood" in chatlog or "!dirt" in chatlog:
         action.say("Deprecated command. use !hax or !item", 0)
+
+    else:
+        if '<' in chatlog:
+            command.save_chat(name, chatlog)
 
 
 
@@ -340,7 +341,7 @@ while loopThread.isAlive(): time.sleep(0.5)
 if enabled("timetrack"):
     timetrk.stop()
     time.sleep(1)
-    
+
 action.say("Minecraft Monitor Version "+version+" stopped!", 0)
 
 #lol = action.send("list")

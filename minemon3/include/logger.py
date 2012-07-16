@@ -1,3 +1,7 @@
+import database
+
+mysql = database.log()
+
 #colors
 color = {   'SYSTEM': '\033[95m',
             'NAME': '\033[94m',
@@ -9,6 +13,10 @@ color = {   'SYSTEM': '\033[95m',
 
 def save(timestamp, c, command, name):
     print color[c] + timestamp.strftime("%H:%M:%S") + " | executing " + command + color["NAME"], "[ " + name + " ]" + color["SYS"]
+    if "!" in command:
+        mysql.add(command, name)
 
 def save2(timestamp, c, command, name, fulhack, target):
     print color[c] + timestamp.strftime("%H:%M:%S") + " | executing " + command + color["NAME"], "[ " + name, fulhack, target + " ]" + color["SYS"]
+    if "!" in command:
+        mysql.add(command, name)

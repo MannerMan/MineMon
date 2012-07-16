@@ -103,5 +103,22 @@ class temphax():
         namecheck = mydb.query("""SELECT t.id, t.name FROM """+db+""".temphax t WHERE t.name = """ + "\'"+name+"\'")
         result = namecheck.fetch_row(0, 1)
         return result
-            
+    
+class log():
+    def add(self, command, name):
+        #get nameid
+        nameid = mydb.query("SELECT u.id FROM users u WHERE u.name ='"+name+"'")
+        nameid = nameid.fetch_row(0, 1)
+        nameid = nameid[0]["id"]
+        
+        #get commandid
+        commandid = mydb.query("SELECT c.id FROM commands c WHERE c.name ='"+command+"'")
+        commandid = commandid.fetch_row(0, 1)
+        commandid = commandid[0]["id"]
+        
+        #DEBUG
+        #print "user "+ name +" with id "+nameid+" ran command "+command+" with id "+commandid
+        
+        #insert into stats_commands
+        mydb.query("INSERT INTO stats_command (user_id, command_id) VALUES ('"+nameid+"', '"+commandid+"');")
     

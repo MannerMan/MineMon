@@ -329,6 +329,12 @@ def temphax_unhax(name):
 def played(name):
     amount = mysql.played(name)
     action.say(name +" has played "+amount+" on this server.", 0)
+    
+def save_chat(name, chatlog):
+    chatlog = chatlog[28:]
+    chatlog = chatlog.replace(name, "", 1)
+    chatlog = chatlog[2:]
+    
         
 #this is beeing called every 5 minutes for playtime tracking
 def playtime():
