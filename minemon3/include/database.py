@@ -86,10 +86,22 @@ class insert():
             print "impossiblu to add playtime to user "+name
             
     def played(self, name):
-        playtime = mydb.query("""SELECT u.played FROM users u WHERE u.name='"""+name+"'")
-        playtime = playtime.fetch_row(0, 1)
-        playtime = playtime[0]["played"]
-        return playtime
+        minutes = mydb.query("SELECT MINUTE((SELECT played from users where name = '"+name+"'))")
+        minutes = minutes.fetch_row(0, 1)
+        minutes = minutes[0]["MINUTE((SELECT played from users where name = '"+name+"'))"]
+
+        hours = mydb.query("SELECT HOUR((SELECT played from users where name = '"+name+"'))")
+        hours = hours.fetch_row(0, 1)
+        hours = hours[0]["HOUR((SELECT played from users where name = '"+name+"'))"]
+        return {'minutes':minutes, 'hours':hours}
+    
+    def report(self, name, msg):
+        #get nameid
+        nameid = mydb.query("SELECT u.id FROM users u WHERE u.name ='"+name+"'")
+        nameid = nameid.fetch_row(0, 1)
+        nameid = nameid[0]["id"]
+        
+        mydb.query("INSERT INTO problemreport (user_id, report) VALUES ('"+nameid+"', '"+msg+"')")
             
 class temphax():
     
@@ -121,4 +133,31 @@ class log():
         
         #insert into stats_commands
         mydb.query("INSERT INTO stats_command (user_id, command_id) VALUES ('"+nameid+"', '"+commandid+"');")
+        
+    def raw(self, log):
+        mydb.query("INSERT INTO raw_log (log) VALUES ('"+log+"');")
+        
+    def addopt(self, command, name, option):
+        #get nameid
+        nameid = mydb.query("SELECT u.id FROM users u WHERE u.name ='"+name+"'")
+        nameid = nameid.fetch_row(0, 1)
+        nameid = nameid[0]["id"]
+        
+        #get commandid
+        commandid = mydb.query("SELECT c.id FROM commands c WHERE c.name ='"+command+"'")
+        commandid = commandid.fetch_row(0, 1)
+        commandid = commandid[0]["id"]
+        
+        #insert into stats_commands
+        mydb.query("INSERT INTO stats_command (`user_id`, `command_id`, `option`) VALUES ('"+nameid+"', '"+commandid+"', '"+option+"');")
+        
+        
+    def chat(self, name, msg):
+        #get nameid
+        nameid = mydb.query("SELECT u.id FROM users u WHERE u.name ='"+name+"'")
+        nameid = nameid.fetch_row(0, 1)
+        nameid = nameid[0]["id"]
+        
+        #insert chatmsg
+        mydb.query("INSERT INTO chat_history (name_id, msg) VALUES('"+nameid+"','"+msg+"')")
     

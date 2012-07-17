@@ -25,7 +25,7 @@ import include.timetrack as timetrack
 legit = True
 
 #### version ####
-version = "3.0.0 beta 3"
+version = "3.0.0 beta 4"
 version = str(version)
 print "starting up MineMon "+version
 time.sleep(0.2)
@@ -129,13 +129,13 @@ def trigger(name):
     elif "!tp" in chatlog and not "CONSOLE" in chatlog:
         if enabled("!tp"):
             who = command.tp(name, chatlog)
-            log.save2(timestamp, "TEXT", "!tp", name, "] [ -> ] [", who)
+            log.save2(timestamp, "TEXT", "!tp", name, "] -> [", who)
 
     elif "!pull" in chatlog and not "CONSOLE" in chatlog:
         if enabled("!pull"):
             if check_op(name):
                 who = command.pull(name, chatlog)
-                log.save2(timestamp, "TEXT", "!pull", name, "] [ <- ] [", who)
+                log.save2(timestamp, "TEXT", "!pull", name, "] <- [", who)
 
     elif "!map" in chatlog:
         if enabled("!map"):
@@ -148,7 +148,7 @@ def trigger(name):
             log.save(timestamp, "SYSTEM", "!help", name)
 
     elif "!version" in chatlog:
-        action.say("Running MineMon version: " + version, 0)
+        action.say("Running MineMon version: " + version+" by Oscar Carlberg", 0)
         log.save(timestamp, "SYSTEM", "!version", name)
 
     elif "!list" in chatlog:
@@ -245,7 +245,7 @@ def trigger(name):
         if enabled("!report"):
             command.mail(name, chatlog)
             log.save(timestamp, "SYSTEM", "!report", name)
-
+            
     elif "!played" in chatlog and not "CONSOLE" in chatlog:
         if enabled("!played"):
             command.played(name)
@@ -260,17 +260,19 @@ def trigger(name):
     elif "[INFO] Done (" in chatlog or "[INFO] RCON running on" in chatlog:
         print "< STARTING SERVER > - Reconnecting to rcon"
         action.connect(mchost, mcport, mcpwd)
+        log.raw_log("< STARTING SERVER >")
 
     elif "[INFO] Saving chunks" in chatlog:
         print "< STOPPING SERVER >"
+        log.raw_log("< STOPPING SERVER >")
 
     #old non-supported commands
     elif "!tnt" in chatlog or "!stone" in chatlog or "!wood" in chatlog or "!dirt" in chatlog:
         action.say("Deprecated command. use !hax or !item", 0)
-
+        
     else:
         if '<' in chatlog:
-            command.save_chat(name, chatlog)
+            log.save_chat(name, chatlog)
 
 
 
@@ -329,6 +331,9 @@ loopThread.start()
 if enabled("timetrack"):
     print "Timetracking enabled, starting timer"
     timetrk.start()
+    
+#log the start
+log.raw_log("Minecraft Monitor Version "+version+" started!")
 
 
 #### exit ####
@@ -341,8 +346,11 @@ while loopThread.isAlive(): time.sleep(0.5)
 if enabled("timetrack"):
     timetrk.stop()
     time.sleep(1)
-
+    
 action.say("Minecraft Monitor Version "+version+" stopped!", 0)
+
+#log the shutdown
+log.raw_log("Minecraft Monitor Version "+version+" stopped!")
 
 #lol = action.send("list")
 #print lol

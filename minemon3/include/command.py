@@ -199,8 +199,12 @@ def mail(name, chatlog):
         issue = issue[28:]
         issue = issue.split("> !report")[-1]
         issue = issue.replace("\n", "")
-        issue = "[ "+name+" ] "+issue
-        action.mail(issue)
+        issue_name = "[ "+name+" ] "+issue
+        #action.mail(issue_name)
+        
+        #log the report to the database
+        mysql.report(name, issue)
+        
         action.say("Problem was reported to the administrator!", 0)
 
 def monsters(path):
@@ -328,12 +332,7 @@ def temphax_unhax(name):
         
 def played(name):
     amount = mysql.played(name)
-    action.say(name +" has played "+amount+" on this server.", 0)
-    
-def save_chat(name, chatlog):
-    chatlog = chatlog[28:]
-    chatlog = chatlog.replace(name, "", 1)
-    chatlog = chatlog[2:]
+    action.say(name +" has played "+amount["hours"]+" hours and "+amount["minutes"]+" minutes on this server.", 0)
     
         
 #this is beeing called every 5 minutes for playtime tracking
