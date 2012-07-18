@@ -25,7 +25,7 @@ import include.timetrack as timetrack
 legit = True
 
 #### version ####
-version = "3.0.0 beta 4"
+version = "3.0.1"
 version = str(version)
 print "starting up MineMon "+version
 time.sleep(0.2)
@@ -152,7 +152,7 @@ def trigger(name):
         log.save(timestamp, "SYSTEM", "!version", name)
 
     elif "!list" in chatlog:
-        action.say("Deprecated. Press <tab>", 0)
+        action.say("Deprecated. Press Tab on your keyboard", 0)
 
     elif "!roll" in chatlog and not "CONSOLE" in chatlog:
         if enabled("!roll"):
