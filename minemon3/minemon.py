@@ -27,6 +27,7 @@ legit = True
 serverstop = False
 
 #### version ####
+#GITTEST
 version = "3.0.2"
 version = str(version)
 print "starting up MineMon "+version
