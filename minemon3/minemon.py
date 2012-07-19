@@ -1,3 +1,4 @@
+#!/usr/local/bin/python
 # -*- coding: utf-8 -*-
 
 # importing regular stuff
@@ -23,9 +24,10 @@ import include.timetrack as timetrack
 
 #### code start ####
 legit = True
+serverstop = False
 
 #### version ####
-version = "3.0.1"
+version = "3.0.2"
 version = str(version)
 print "starting up MineMon "+version
 time.sleep(0.2)
@@ -59,10 +61,15 @@ gpw = config.get('config', 'gmailpw')
 mailrcvr = config.get('config', 'sendto')
 
 #### announce that i'm running ####
-action.connect(mchost, mcport, mcpwd)
+try:
+    action.connect(mchost, mcport, mcpwd)
+except:
+    print "Coult not connect to Minecraft Rcon!"
+    sys.exit()
+
 action.load(gmail, gpw, mailrcvr, screen)
-action.say("Minecraft Monitor Version "+version+" now running!", 1)
-action.say("Type !help for available commands", 0)
+action.say("§aMinecraft Monitor Version "+version+" now running!", 1)
+action.say("§aType !help for available commands", 0)
 
 ops = action.load_op(mcpath)
 timetrk=timetrack.playtime()
@@ -80,6 +87,17 @@ def enabled(onoroff):
     else:
         action.say("This command has been disabled!", 0)
         return False
+    
+def silent_enabled(onoroff):
+    try:
+        setting = config.get('config', onoroff)
+    except:
+        setting = "disabled"
+        print "NO setting entry for "+onoroff+", disabled."
+    if "enabled" in setting:
+        return True
+    else:
+        return False
 
 def check_op(name):
     if name.lower() in ops:
@@ -89,6 +107,8 @@ def check_op(name):
 
 #### Trigger on chattlog stuff ####
 def trigger(name):
+    global serverstop
+    
     if "!sheen" in chatlog:
         if enabled("!sheen"):
             command.sheen()
@@ -261,10 +281,28 @@ def trigger(name):
         print "< STARTING SERVER > - Reconnecting to rcon"
         action.connect(mchost, mcport, mcpwd)
         log.raw_log("< STARTING SERVER >")
+        serverstop = False
+        global timetrk
+        if silent_enabled("timetrack"):
+            timetrk=timetrack.playtime()
+            timetrk.start()
+            print "< Playtime-tracking started >"
+            
 
-    elif "[INFO] Saving chunks" in chatlog:
+    elif "[INFO] Saving chunks" in chatlog and serverstop == False:
         print "< STOPPING SERVER >"
         log.raw_log("< STOPPING SERVER >")
+        serverstop = True
+        if silent_enabled("timetrack"):
+            try:
+                timetrk.stop()
+                while timetrk.isAlive():
+                    time.sleep(1)
+                del timetrk
+                print "< Playtime-tracking stopped >"
+            except:
+                print "Could not stop timetrack!"
+                log.raw_log("Could not stop timetrack!")
 
     #old non-supported commands
     elif "!tnt" in chatlog or "!stone" in chatlog or "!wood" in chatlog or "!dirt" in chatlog:
@@ -328,13 +366,12 @@ fileList = fileHandle.readlines()
 loopThread = newLoopingThread(1)
 loopThread.start()
 
-if enabled("timetrack"):
+if silent_enabled("timetrack"):
     print "Timetracking enabled, starting timer"
     timetrk.start()
     
 #log the start
 log.raw_log("Minecraft Monitor Version "+version+" started!")
-
 
 #### exit ####
 print "press any key to exit"
@@ -344,10 +381,13 @@ print "Waiting for looping thread to stop..."
 while loopThread.isAlive(): time.sleep(0.5)
 
 if enabled("timetrack"):
-    timetrk.stop()
-    time.sleep(1)
+    try:
+        timetrk.stop()
+        time.sleep(1)
+    except:
+        print "Could not stop timetracking, although its enabled - perhaps MC is not running?"
     
-action.say("Minecraft Monitor Version "+version+" stopped!", 0)
+action.say("§cMinecraft Monitor Version "+version+" stopped!", 0)
 
 #log the shutdown
 log.raw_log("Minecraft Monitor Version "+version+" stopped!")

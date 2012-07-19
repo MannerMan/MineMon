@@ -32,7 +32,6 @@ class playtime(Thread):
        time.sleep(1)
 
  def stop(self):
-    print "stopping timecount!"
     try:
         self.cont=False
     except:

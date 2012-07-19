@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import action
 import random
 import os
@@ -41,15 +43,15 @@ def login(chatlog, version, helpurl):
     online = online[:-2]
 
     #greet and return nick
-    action.say(hail + name + "! Online: " + online, 0)
+    action.say("§a"+hail + name + "! Online: " + online, 0)
     mysql.login(name, version)
     
     #check if a new MM version was deployed since last visit.
     vermatch = mysql.version(name, version)
     if vermatch:
         time.sleep(1)
-        action.send("tell "+name+" A new version of MineMon was deployed since your last visit!", 2)
-        action.send("tell "+name+" Please see "+helpurl+" for changelog", 0.2)
+        action.send("tell "+name+" §bA §cnew version§b of MineMon was deployed since your last visit!", 2)
+        action.send("tell "+name+" §bPlease see §c"+helpurl+"§b for changelog", 0.2)
         mysql.upd_version(name, version)
     
     #check if user was temphaxed
@@ -66,7 +68,7 @@ def logout(chatlog):
     name = name.split(bort, 1)[0]
 
     #say goodbye & return nick for logg
-    action.say("Goodbye " + name + " !", 0)
+    action.say("§cGoodbye " + name + " !", 0)
     mysql.logout(name)
     return name
 
