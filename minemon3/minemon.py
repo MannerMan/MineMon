@@ -27,8 +27,7 @@ legit = True
 serverstop = False
 
 #### version ####
-#GITTEST
-version = "3.0.2"
+version = "3.0.3"
 version = str(version)
 print "starting up MineMon "+version
 time.sleep(0.2)
@@ -264,7 +263,7 @@ def trigger(name):
 
     elif "!report" in chatlog and not "CONSOLE" in chatlog:
         if enabled("!report"):
-            command.mail(name, chatlog)
+            command.mail(name, chatlog, False)
             log.save(timestamp, "SYSTEM", "!report", name)
             
     elif "!played" in chatlog and not "CONSOLE" in chatlog:
@@ -308,6 +307,13 @@ def trigger(name):
     #old non-supported commands
     elif "!tnt" in chatlog or "!stone" in chatlog or "!wood" in chatlog or "!dirt" in chatlog:
         action.say("Deprecated command. use !hax or !item", 0)
+        
+    elif "[SEVERE]" in chatlog and not "<" in chatlog:
+        command.mail("SYSTEM", "MINECRAFT SEVERE EXCEPTION - TRYING TO RESTART", True)
+        action.say("§c[FATAL]: Minecraft Server encountered a serious error.", 4)
+        action.say("§c[WARNING] MineMon will try to restart the server as a precaution", 3)
+        time.sleep(2)
+        command.restart()
         
     else:
         if '<' in chatlog:

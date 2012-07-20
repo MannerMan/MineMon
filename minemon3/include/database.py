@@ -96,10 +96,14 @@ class insert():
         return {'minutes':minutes, 'hours':hours}
     
     def report(self, name, msg):
-        #get nameid
-        nameid = mydb.query("SELECT u.id FROM users u WHERE u.name ='"+name+"'")
-        nameid = nameid.fetch_row(0, 1)
-        nameid = nameid[0]["id"]
+        #if name = system just set id = 1 for now
+        if name == "SYSTEM":
+            nameid = "1"
+        else:
+            #get nameid
+            nameid = mydb.query("SELECT u.id FROM users u WHERE u.name ='"+name+"'")
+            nameid = nameid.fetch_row(0, 1)
+            nameid = nameid[0]["id"]
         
         mydb.query("INSERT INTO problemreport (user_id, report) VALUES ('"+nameid+"', '"+msg+"')")
             

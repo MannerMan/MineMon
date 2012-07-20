@@ -196,7 +196,7 @@ def restart():
     #yeah this is hard though rcon >.<
     action.start_server()
 
-def mail(name, chatlog):
+def mail(name, chatlog, crash):
         issue = chatlog
         issue = issue[28:]
         issue = issue.split("> !report")[-1]
@@ -205,7 +205,10 @@ def mail(name, chatlog):
         #action.mail(issue_name)
         
         #log the report to the database
-        mysql.report(name, issue)
+        if crash:
+            mysql.report(name, chatlog)
+        else:
+            mysql.report(name, issue)
         
         action.say("Problem was reported to the administrator!", 0)
 
