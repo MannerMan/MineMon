@@ -35,8 +35,11 @@ def login(chatlog, version, helpurl):
     hail = (hello[greetnum])
 
     #check who's online
+    #check who's online
     online = action.send("list", 0.1)
-    online = online.split("Connected players: ")[-1]
+    online = online.split("There are ")[-1]
+    online = online[5:]
+    online = online.split("players online:")[-1]
     online = online.split(name, 1)[0] #remove playername from online
     if online == "":
         online = "None. "
@@ -73,10 +76,13 @@ def logout(chatlog):
     return name
 
 def hax(name):
-    action.send("gamemode " + name + " 1", 0)
+    action.send("gamemode 1 " +name, 0)
 
 def unhax(name):
-    action.send("gamemode " + name + " 0", 0)
+    action.send("gamemode 0 " + name, 0)
+    
+def adv(name):
+	action.send("gamemode 2 " + name, 0)
 
 def day():
     action.send("time set 10", 0)
@@ -344,7 +350,9 @@ def played(name):
 def playtime():
     #check who's online
     online = action.send("list", 0.1)
-    online = online.split("Connected players: ")[-1]
+    online = online.split("There are ")[-1]
+    online = online[5:]
+    online = online.split("players online:")[-1]
     online = online.split()
     if not online:
         pass

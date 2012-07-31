@@ -27,7 +27,7 @@ legit = True
 serverstop = False
 
 #### version ####
-version = "3.0.3"
+version = "3.1 beta"
 version = str(version)
 print "starting up MineMon "+version
 time.sleep(0.2)
@@ -135,6 +135,12 @@ def trigger(name):
             if check_op(name):
                 command.unhax(name)
                 log.save(timestamp, "SYSTEM", "!unhax", name)
+                
+    elif "!adv" in chatlog and not "CONSOLE" in chatlog:
+        if enabled("!adv"):
+            if check_op(name):
+                command.adv(name)
+                log.save(timestamp, "SYSTEM", "!adv", name)
 
     elif "!day" in chatlog:
         if enabled("!day"):
@@ -271,7 +277,7 @@ def trigger(name):
             command.played(name)
             log.save(timestamp, "TEXT", "!played", name)
 
-    elif "Opping" in chatlog or "De-opping" in chatlog:
+    elif "Opped" in chatlog or "De-opped" in chatlog:
         global ops
         ops = action.load_op(mcpath)
         action.say("Detecting change in OP's, refreshing list!", 0)
