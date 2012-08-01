@@ -27,7 +27,7 @@ legit = True
 serverstop = False
 
 #### version ####
-version = "3.1 beta"
+version = "3.1 beta 3"
 version = str(version)
 print "starting up MineMon "+version
 time.sleep(0.2)
@@ -87,7 +87,7 @@ def enabled(onoroff):
     else:
         action.say("This command has been disabled!", 0)
         return False
-    
+
 def silent_enabled(onoroff):
     try:
         setting = config.get('config', onoroff)
@@ -108,7 +108,7 @@ def check_op(name):
 #### Trigger on chattlog stuff ####
 def trigger(name):
     global serverstop
-    
+
     if "!sheen" in chatlog:
         if enabled("!sheen"):
             command.sheen()
@@ -135,7 +135,7 @@ def trigger(name):
             if check_op(name):
                 command.unhax(name)
                 log.save(timestamp, "SYSTEM", "!unhax", name)
-                
+
     elif "!adv" in chatlog and not "CONSOLE" in chatlog:
         if enabled("!adv"):
             if check_op(name):
@@ -271,7 +271,7 @@ def trigger(name):
         if enabled("!report"):
             command.mail(name, chatlog, False)
             log.save(timestamp, "SYSTEM", "!report", name)
-            
+
     elif "!played" in chatlog and not "CONSOLE" in chatlog:
         if enabled("!played"):
             command.played(name)
@@ -293,7 +293,7 @@ def trigger(name):
             timetrk=timetrack.playtime()
             timetrk.start()
             print "< Playtime-tracking started >"
-            
+
 
     elif "[INFO] Saving chunks" in chatlog and serverstop == False:
         print "< STOPPING SERVER >"
@@ -313,14 +313,14 @@ def trigger(name):
     #old non-supported commands
     elif "!tnt" in chatlog or "!stone" in chatlog or "!wood" in chatlog or "!dirt" in chatlog:
         action.say("Deprecated command. use !hax or !item", 0)
-        
-    elif "[SEVERE]" in chatlog and not "<" in chatlog:
+
+    elif "[SEVERE]" in chatlog or "(SourceFile:" in chatlog and not "<" in chatlog:
         command.mail("SYSTEM", "MINECRAFT SEVERE EXCEPTION - TRYING TO RESTART", True)
         action.say("§c[FATAL]: Minecraft Server encountered a serious error.", 4)
         action.say("§c[WARNING] MineMon will try to restart the server as a precaution", 3)
         time.sleep(2)
         command.restart()
-        
+
     else:
         if '<' in chatlog:
             log.save_chat(name, chatlog)
@@ -382,7 +382,7 @@ loopThread.start()
 if silent_enabled("timetrack"):
     print "Timetracking enabled, starting timer"
     timetrk.start()
-    
+
 #log the start
 log.raw_log("Minecraft Monitor Version "+version+" started!")
 
@@ -399,7 +399,7 @@ if enabled("timetrack"):
         time.sleep(1)
     except:
         print "Could not stop timetracking, although its enabled - perhaps MC is not running?"
-    
+
 action.say("§cMinecraft Monitor Version "+version+" stopped!", 0)
 
 #log the shutdown
