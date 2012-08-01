@@ -26,7 +26,7 @@ def login(chatlog, version, helpurl):
     #get nick
     name = chatlog
     name = name[27:]
-    bort = ' '
+    bort = '['
     name = name.split(bort, 1)[0]
 
     #Choose greeting
@@ -48,7 +48,7 @@ def login(chatlog, version, helpurl):
     #greet and return nick
     action.say("§a"+hail + name + "! Online: " + online, 0)
     mysql.login(name, version)
-    
+
     #check if a new MM version was deployed since last visit.
     vermatch = mysql.version(name, version)
     if vermatch:
@@ -56,10 +56,10 @@ def login(chatlog, version, helpurl):
         action.send("tell "+name+" §bA §cnew version§b of MineMon was deployed since your last visit!", 2)
         action.send("tell "+name+" §bPlease see §c"+helpurl+"§b for changelog", 0.2)
         mysql.upd_version(name, version)
-    
+
     #check if user was temphaxed
     temphax_check(name)
-    
+
     return name
 
 def logout(chatlog):
@@ -80,7 +80,7 @@ def hax(name):
 
 def unhax(name):
     action.send("gamemode 0 " + name, 0)
-    
+
 def adv(name):
 	action.send("gamemode 2 " + name, 0)
 
@@ -209,13 +209,13 @@ def mail(name, chatlog, crash):
         issue = issue.replace("\n", "")
         issue_name = "[ "+name+" ] "+issue
         #action.mail(issue_name)
-        
+
         #log the report to the database
         if crash:
             mysql.report(name, chatlog)
         else:
             mysql.report(name, issue)
-        
+
         action.say("Problem was reported to the administrator!", 0)
 
 def monsters(path):
@@ -289,15 +289,15 @@ def update(path, port):
         action.send_sys("mv /tmp/"+port+"/minecraft_server.jar "+ server, 1)
         action.start_server()
         return "Updated server!"
-    
+
 def temphax(chatlog):
-    
+
     #extract target
     who = chatlog
     who = who[28:]
     who = who.split("> !temphax")[-1]
     who = who.replace("\n", "")
-    
+
     #if no target notify
     if who == "":
         action.say("Need a target!", 0)
@@ -310,7 +310,7 @@ def temphax(chatlog):
         #templist here
         dbtemphax.add(who)
         return who
-    
+
 def temphax_check(name):
     #ask mysql if name exists in the temphax list
     result = dbtemphax.check(name)
@@ -324,7 +324,7 @@ def temphax_check(name):
         tempname = name
         haxThread = unhaxThread(2)
         haxThread.start()
-        
+
 def temphax_unhax(name):
     action.say("[Warning] " + name + " is NOT authed for this session!", 4)
     action.say(name + " - You will be un-haxed!", 3)
@@ -340,12 +340,12 @@ def temphax_unhax(name):
         dbtemphax.remove(name)
         #just gonna print something here for now, should return and logg instead
         print "TEMPHAX: unhaxed "+name
-        
+
 def played(name):
     amount = mysql.played(name)
     action.say(name +" has played "+amount["hours"]+" hours and "+amount["minutes"]+" minutes on this server.", 0)
-    
-        
+
+
 #this is beeing called every 5 minutes for playtime tracking
 def playtime():
     #check who's online
