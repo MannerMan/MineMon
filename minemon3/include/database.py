@@ -162,6 +162,9 @@ class log():
         nameid = nameid.fetch_row(0, 1)
         nameid = nameid[0]["id"]
         
+        #clean chat-msg from ' etc
+        msg = _mysql.escape_string(msg)
+        
         #insert chatmsg
         mydb.query("INSERT INTO chat_history (name_id, msg) VALUES('"+nameid+"','"+msg+"')")
     

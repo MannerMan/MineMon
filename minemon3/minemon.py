@@ -27,7 +27,7 @@ legit = True
 serverstop = False
 
 #### version ####
-version = "3.1 beta 4"
+version = "3.1 beta 6"
 version = str(version)
 print "starting up MineMon "+version
 time.sleep(0.2)
