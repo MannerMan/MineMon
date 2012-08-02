@@ -66,12 +66,12 @@ class insert():
         #if not, add user
         if not user:
             print "Adding new user to database"
-            mydb.query("""INSERT INTO `"""+db+"""`.`users` (`name`, `id`, `played`, `online`, `last_online`, `version`) VALUES ('"""+name+"""', NULL, '00:00:00', '1',CURRENT_TIMESTAMP,'"""+version+"');")
+            mydb.query("""INSERT INTO `"""+db+"""`.`users` (`name`, `id`, `played`, `online`, `last_online`, `version`, `logins`) VALUES ('"""+name+"""', NULL, '00:00:00', '1',CURRENT_TIMESTAMP,'"""+version+"', '1');")
             
         #if they do exist, update online and last_online
         else:
             #print "DEBUG: updating user "+name+" to online and last_online"
-            mydb.query("""UPDATE `"""+db+"""`.`users` SET `last_online` = CURRENT_TIMESTAMP, `online` = '1' WHERE `users`.`name` ='"""+name+"';")
+            mydb.query("""UPDATE `"""+db+"""`.`users` SET `last_online` = CURRENT_TIMESTAMP, `online` = '1', `logins` = `logins` + '1' WHERE `users`.`name` ='"""+name+"';")
             
     def logout(self, name):
         #print "DEBUG: Setting user "+name+" as offline"
