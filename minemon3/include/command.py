@@ -9,6 +9,7 @@ import time
 import database
 import thread
 import threading
+import achievement as achi
 
 mysql = database.insert()
 dbtemphax = database.temphax()
@@ -60,6 +61,9 @@ def login(chatlog, version, helpurl):
     #check if user was temphaxed
     temphax_check(name)
 
+    #check for 100 logins achi
+    achi.loyal_cust(name)
+    
     return name
 
 def logout(chatlog):
@@ -139,7 +143,7 @@ def rain():
 
 def xp(name):
     for antal in range(0,4):
-        action.send("xp " + name + " 5000", 0.2)
+        action.send("xp 5000 " + name, 0.2)
 
 def kit(name):
     item = 276
@@ -360,6 +364,22 @@ def playtime():
     else:
         for user in online:
             mysql.playtime(user)
+            
+# this is beeing called when server goes down at the night, for achivement
+def late():
+    #check who's online
+    online = action.send("list", 0.1)
+    online = online.split("There are ")[-1]
+    online = online[5:]
+    online = online.split("players online:")[-1]
+    online = online.replace(',','')
+    online = online.split()
+    if not online:
+        pass
+        #print "NO USERS ONLINE"
+    else:
+        for user in online:
+            achi.late_gamer(user)
 
 #this thread runs "temphax-unhaxing" so MM can function normal during this process.
 class unhaxThread (threading.Thread):

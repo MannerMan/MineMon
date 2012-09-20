@@ -5,6 +5,19 @@ import struct
 import re
 import _mysql
 
+def get_name_id(name):
+    nameid = mydb.query("SELECT u.id FROM users u WHERE u.name ='"+name+"'")
+    nameid = nameid.fetch_row(0, 1)
+    nameid = nameid[0]["id"]
+    return nameid
+
+def get_command_id(command):
+    commandid = mydb.query("SELECT c.id FROM commands c WHERE c.name ='"+command+"'")
+    commandid = commandid.fetch_row(0, 1)
+    commandid = commandid[0]["id"]
+    return commandid
+    
+
 def settings(myhost, myuser, mypass, mydb):
     global dbhost
     global user
@@ -101,9 +114,7 @@ class insert():
             nameid = "1"
         else:
             #get nameid
-            nameid = mydb.query("SELECT u.id FROM users u WHERE u.name ='"+name+"'")
-            nameid = nameid.fetch_row(0, 1)
-            nameid = nameid[0]["id"]
+            nameid = get_name_id(name)
         
         mydb.query("INSERT INTO problemreport (user_id, report) VALUES ('"+nameid+"', '"+msg+"')")
             
@@ -123,14 +134,10 @@ class temphax():
 class log():
     def add(self, command, name):
         #get nameid
-        nameid = mydb.query("SELECT u.id FROM users u WHERE u.name ='"+name+"'")
-        nameid = nameid.fetch_row(0, 1)
-        nameid = nameid[0]["id"]
+        nameid = get_name_id(name)
         
         #get commandid
-        commandid = mydb.query("SELECT c.id FROM commands c WHERE c.name ='"+command+"'")
-        commandid = commandid.fetch_row(0, 1)
-        commandid = commandid[0]["id"]
+        commandid = get_command_id(command)
         
         #DEBUG
         #print "user "+ name +" with id "+nameid+" ran command "+command+" with id "+commandid
@@ -143,14 +150,10 @@ class log():
         
     def addopt(self, command, name, option):
         #get nameid
-        nameid = mydb.query("SELECT u.id FROM users u WHERE u.name ='"+name+"'")
-        nameid = nameid.fetch_row(0, 1)
-        nameid = nameid[0]["id"]
+        nameid = get_name_id(name)
         
         #get commandid
-        commandid = mydb.query("SELECT c.id FROM commands c WHERE c.name ='"+command+"'")
-        commandid = commandid.fetch_row(0, 1)
-        commandid = commandid[0]["id"]
+        commandid = get_command_id(command)
         
         #insert into stats_commands
         mydb.query("INSERT INTO stats_command (`user_id`, `command_id`, `option`) VALUES ('"+nameid+"', '"+commandid+"', '"+option+"');")
@@ -158,13 +161,61 @@ class log():
         
     def chat(self, name, msg):
         #get nameid
-        nameid = mydb.query("SELECT u.id FROM users u WHERE u.name ='"+name+"'")
-        nameid = nameid.fetch_row(0, 1)
-        nameid = nameid[0]["id"]
+        nameid = get_name_id(name)
         
         #clean chat-msg from ' etc
         msg = _mysql.escape_string(msg)
         
         #insert chatmsg
         mydb.query("INSERT INTO chat_history (name_id, msg) VALUES('"+nameid+"','"+msg+"')")
+        
+class achi():
+    def __init__(self):
+        #nothing
+        pass
+    
+    def check_achi(self, name, achi):
+        nameid = get_name_id(name)
+        
+        gotachi = mydb.query("SELECT e.user_id, e.achi_id FROM earned_achi e WHERE e.user_id = '"+nameid+"' AND e.achi_id = '"+str(achi)+"';")
+        gotachi = gotachi.fetch_row(0, 1)
+        
+        if gotachi:
+            return True
+        else:
+            return False
+        
+    def earn_achi(self, name, achi):
+        #insert achi to earned_achi
+        nameid = get_name_id(name)
+        mydb.query("INSERT INTO earned_achi (user_id, achi_id) VALUES('"+nameid+"','"+str(achi)+"');")
+        
+        #get name of achi
+        achiname = mydb.query("SELECT a.name from Achivements a where a.id ='"+str(achi)+"';")
+        achiname = achiname.fetch_row(0, 1)
+        achiname = achiname[0]["name"]
+        
+        #get achidescr
+        achidesc = mydb.query("SELECT a.desc from Achivements a where a.id ='"+str(achi)+"';")
+        achidesc = achidesc.fetch_row(0, 1)
+        achidesc = achidesc[0]["desc"]
+        
+        #hm..
+        print "user "+name+" earnead achi: "+achiname
+        print achidesc
+        
+        
+    def loyal(self, name):
+        nameid = get_name_id(name)
+            
+        canhas = mydb.query("SELECT u.logins FROM users u WHERE u.id ='"+nameid+"';")
+        canhas = canhas.fetch_row(0, 1)
+        canhas = canhas[0]["logins"]
+        if canhas == "100":
+            return True
+        else:
+            return False
+        
+        
+            
     

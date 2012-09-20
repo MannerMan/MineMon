@@ -27,7 +27,7 @@ legit = True
 serverstop = False
 
 #### version ####
-version = "3.1 beta 6"
+version = "3.1 beta 7"
 version = str(version)
 print "starting up MineMon "+version
 time.sleep(0.2)
@@ -320,6 +320,9 @@ def trigger(name):
         action.say("§c[WARNING] MineMon will try to restart the server as a precaution", 3)
         time.sleep(2)
         command.restart()
+        
+    elif "qwop" in chatlog:
+        command.late()
 
     else:
         if '<' in chatlog:
