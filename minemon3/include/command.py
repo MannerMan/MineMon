@@ -13,6 +13,7 @@ import achievement as achi
 
 mysql = database.insert()
 dbtemphax = database.temphax()
+dbworld = database.world()
 
 #### Actual commands ####
 
@@ -350,7 +351,26 @@ def played(name):
     action.say(name +" has played "+amount["hours"]+" hours and "+amount["minutes"]+" minutes on this server.", 0)
 
 def world(name, chatlog):
-    print name, chatlog
+
+    #extract realmname
+    realm = chatlog
+    realm = realm[28:]
+    realm = realm.split("!world ")[-1]
+    realm = realm.replace("\n", "")
+
+    #Check if the choosen realm exists
+    if dbworld.check_exists(realm):
+        #Check if the choosen realm is active
+        if dbworld.check_active(realm):
+            pass
+        else:
+            action.say("The world "+realm+" is already active")
+
+    else:
+        action.say("The world "+realm+" does not exist.", 0)
+
+
+    print name, realm
 
 
 #this is beeing called every 5 minutes for playtime tracking

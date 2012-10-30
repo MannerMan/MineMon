@@ -216,6 +216,25 @@ class achi():
         else:
             return False
         
-        
+class world():
+    def __init__(self):
+        #nothing
+        pass
+
+    def check_exist(realm):
+        #write sql-query here
+        return True
+
+    def check_active(realm):
+        #write sql-query here
+        return True
+
+    def set_inactive():
+        #write sql-query here
+        return True
+
+    def set_active():
+        #write sql-query here
+        return True
             
     
