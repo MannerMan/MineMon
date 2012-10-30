@@ -269,7 +269,7 @@ def update(path, port):
     action.send_sys("rm /tmp/"+port+"/minecraft_server.jar", 1)
 
     #download latest version
-    action.send_sys("wget -b --directory-prefix=/tmp/"+port+"/ https://s3.amazonaws.com/MinecraftDownload/launcher/minecraft_server.jar", 10)
+    action.send_sys("wget -quiet --directory-prefix=/tmp/"+port+"/ https://s3.amazonaws.com/MinecraftDownload/launcher/minecraft_server.jar", 10)
     action.say("Done, comparing versions..", 0.5)
     server = path + "minecraft_server.jar"
 
@@ -287,7 +287,7 @@ def update(path, port):
     else:
         action.say("Versions does not match!", 3)
         action.say("Im going to try something crazy and update myself!", 4)
-        action.say("Dont be mad if shit goes bad :3", 2)
+        action.say("Dont be mad if shit goes bad :3", 4)
         action.stop_server()
         action.send_sys("rm "+ server, 1)
         action.send_sys("mv /tmp/"+port+"/minecraft_server.jar "+ server, 1)
@@ -348,6 +348,9 @@ def temphax_unhax(name):
 def played(name):
     amount = mysql.played(name)
     action.say(name +" has played "+amount["hours"]+" hours and "+amount["minutes"]+" minutes on this server.", 0)
+
+def world(name, chatlog):
+    print name, chatlog
 
 
 #this is beeing called every 5 minutes for playtime tracking

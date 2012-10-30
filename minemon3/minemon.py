@@ -55,6 +55,7 @@ mcpath = config.get('config', 'mcpath')
 mapurl = config.get('config', 'mapurl')
 helpurl = config.get('config', 'helpurl')
 screen = config.get('config', 'screen')
+mc_mem = config.get('config', 'mc_mem')
 
 gmail = config.get('config', 'gmail')
 gpw = config.get('config', 'gmailpw')
@@ -67,7 +68,7 @@ except:
     print "Coult not connect to Minecraft Rcon!"
     sys.exit()
 
-action.load(gmail, gpw, mailrcvr, screen)
+action.load(gmail, gpw, mailrcvr, screen, mc_mem)
 action.say("§aMinecraft Monitor Version "+version+" now running!", 1)
 action.say("§aType !help for available commands", 0)
 
@@ -276,6 +277,11 @@ def trigger(name):
         if enabled("!played"):
             command.played(name)
             log.save(timestamp, "TEXT", "!played", name)
+
+    elif "!world" in chatlog and not "CONSOLE" in chatlog:
+        if enabled("!world"):
+            command.world(name, chatlog)
+            log.save(timestamp, "SYSTEM", "!world", name)
 
     elif "Opped" in chatlog or "De-opped" in chatlog:
         global ops

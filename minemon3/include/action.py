@@ -10,13 +10,15 @@ import os
 import sys
 
 
-def load(mail, pw, sendto, screen):
+def load(mail, pw, sendto, screen, mem):
     print screen
     global scrn
     global gmail
     global gpw
     global rcvr
+    global mem
 
+    mem = mem
     scrn = screen
     gmail = mail
     gpw = pw
@@ -83,7 +85,7 @@ def stop_server():
 
 def start_server():
     time.sleep(2)
-    send_task("java -Xmx700M -Xms700M -jar minecraft_server.jar nogui", 0)
+    send_task("java -Xmx"+mem+"M -Xms"+mem+"M -jar minecraft_server.jar nogui", 0)
 
 class MCRcon:
     def __init__(self, host, port, password):
