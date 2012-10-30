@@ -221,20 +221,42 @@ class world():
         #nothing
         pass
 
-    def check_exist(realm):
-        #write sql-query here
-        return True
+    def check_exist(self, realm):
+        world_exist = mydb.query("SELECT * from worlds w where w.world_name ='"+realm+"';")
+        world_exist = world_exist.fetch_row(0, 1)
 
-    def check_active(realm):
-        #write sql-query here
-        return True
+        if world_exist:
+            return True
+        else:
+            return False
 
-    def set_inactive():
-        #write sql-query here
-        return True
+    def check_active(self, realm):
+        world_active = mydb.query("SELECT w.active from worlds w where w.world_name ='"+realm+"';")
+        world_active = world_active.fetch_row(0, 1)
+        world_active = world_active[0]["active"]
 
-    def set_active():
-        #write sql-query here
-        return True
+        if world_active == '0':
+            return True
+        else:
+            return False
+
+    def get_world(self, realm):
+        world_path = mydb.query("SELECT w.path from worlds w where w.world_name ='"+realm+"';")
+        world_path = world_path.fetch_row(0, 1)
+        world_path = world_path[0]["path"]
+        return world_path
+
+    def get_current(self):
+        world_current = mydb.query("SELECT w.path from worlds w where w.active ='1';")
+        world_current = world_current.fetch_row(0, 1)
+        world_current = world_current[0]["path"]
+        return world_current
+
+    def set_active(self, realm):
+        #inactivate current
+        mydb.query("UPDATE worlds w SET w.active = 0 WHERE w.active = 1")
+
+        #activate new
+        mydb.query("UPDATE worlds w SET w.active = 1, w.used = w.used + 1, w.timestamp = CURRENT_TIMESTAMP WHERE w.world_name ='"+realm+"'")
             
     

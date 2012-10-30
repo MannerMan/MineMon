@@ -10,7 +10,7 @@ import os
 import sys
 
 
-def load(mail, pw, sendto, screen, mem):
+def load(mail, pw, sendto, screen, mc_mem):
     print screen
     global scrn
     global gmail
@@ -18,7 +18,7 @@ def load(mail, pw, sendto, screen, mem):
     global rcvr
     global mem
 
-    mem = mem
+    mem = mc_mem
     scrn = screen
     gmail = mail
     gpw = pw

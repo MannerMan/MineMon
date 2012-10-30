@@ -266,11 +266,8 @@ def monsters(path):
 def update(path, port):
     action.say("Downloading minecraft_server...", 0)
 
-    #remove any old leftovers
-    action.send_sys("rm /tmp/"+port+"/minecraft_server.jar", 1)
-
     #download latest version
-    action.send_sys("wget -quiet --directory-prefix=/tmp/"+port+"/ https://s3.amazonaws.com/MinecraftDownload/launcher/minecraft_server.jar", 10)
+    action.send_sys("wget --quiet --directory-prefix=/tmp/"+port+"/ https://s3.amazonaws.com/MinecraftDownload/launcher/minecraft_server.jar", 10)
     action.say("Done, comparing versions..", 0.5)
     server = path + "minecraft_server.jar"
 
@@ -350,27 +347,79 @@ def played(name):
     amount = mysql.played(name)
     action.say(name +" has played "+amount["hours"]+" hours and "+amount["minutes"]+" minutes on this server.", 0)
 
-def world(name, chatlog):
+def world(name, chatlog, mcpath):
 
     #extract realmname
     realm = chatlog
     realm = realm[28:]
-    realm = realm.split("!world ")[-1]
+    realm = realm.split("> !world")[-1]
     realm = realm.replace("\n", "")
+    realm = realm.replace(" ", "")
 
-    #Check if the choosen realm exists
-    if dbworld.check_exists(realm):
-        #Check if the choosen realm is active
-        if dbworld.check_active(realm):
-            pass
-        else:
-            action.say("The world "+realm+" is already active")
+    #if no realm notify
+    if realm == "":
+        action.say("Need a realm!", 0)
 
     else:
-        action.say("The world "+realm+" does not exist.", 0)
 
+        #Check if the choosen realm exists
+        if dbworld.check_exist(realm):
 
-    print name, realm
+            #temp
+            action.say("world "+realm+" exists", 1)
+
+            #Check if the choosen realm is active
+            if dbworld.check_active(realm):
+
+                #temp
+                action.say("world "+realm+" is not active", 1)
+
+                #start activation of the new realm
+                action.say("The world "+realm+" is being activated..", 1)
+
+                #load folder of new world from MYSQL
+                world_path = dbworld.get_world(realm)
+                change_world(world_path, mcpath)
+
+                #Activate new realm in database
+                dbworld.set_active(realm)
+
+            else:
+                action.say("The world "+realm+" is already active", 1)
+
+        else:
+            action.say("The world "+realm+" does not exist.", 0)
+
+#this is the function that changes worlds
+def change_world(new_world, path):
+    #real and tempfile
+    properties = path + "server.properties"
+    mc_out = "/tmp/tempsett.txt"
+
+    #open them
+    mc_settings = open(properties, "r")
+    mc_out = open(mc_out, "w")
+
+    # loop through the test file line by line
+    # and write only the lines back out that do
+    # not contain the search string
+    search = "level-name="
+    for line in mc_settings:
+        if search not in line:
+            mc_out.write(line)
+        else:
+            action.say("[Warning] Server going down for realm-change in 10 seconds", 5)
+            action.say("[Warning] Server going down for realm-change in 5 seconds.", 5)
+            action.stop_server()
+            mc_out.write("level-name="+new_world+"\n")
+            action.send_sys("rm " + properties, 0)
+            action.send_sys("mv /tmp/tempsett.txt " + properties, 0)
+            time.sleep(1)
+            action.start_server()
+
+    # close the file handles
+    mc_settings.close()
+    mc_out.close()
 
 
 #this is beeing called every 5 minutes for playtime tracking
