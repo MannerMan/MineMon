@@ -27,7 +27,7 @@ legit = True
 serverstop = False
 
 #### version ####
-version = "3.2 beta 3"
+version = "3.2 beta 4"
 version = str(version)
 print "starting up MineMon "+version
 time.sleep(0.2)
@@ -281,8 +281,9 @@ def trigger(name):
     elif "!world" in chatlog and not "CONSOLE" in chatlog:
         if enabled("!world"):
             if check_op(name):
-                command.world(name, chatlog, mcpath)
-                log.save(timestamp, "SYSTEM", "!world", name)
+                success = command.world(name, chatlog, mcpath)
+                if success:
+                    log.save2(timestamp, "SYSTEM", "!world", name, "] [", success)
 
     elif "Opped" in chatlog or "De-opped" in chatlog:
         global ops

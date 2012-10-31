@@ -365,17 +365,13 @@ def world(name, chatlog, mcpath):
         #Check if the choosen realm exists
         if dbworld.check_exist(realm):
 
-            #temp
-            action.say("world "+realm+" exists", 1)
-
             #Check if the choosen realm is active
             if dbworld.check_active(realm):
 
-                #temp
-                action.say("world "+realm+" is not active", 1)
-
                 #start activation of the new realm
-                action.say("The world "+realm+" is being activated..", 1)
+                action.say("Loading module [ §6Armageddon§5 ]", 2)
+                action.say("§c!! Experimental feature !!", 2)
+                action.say("§fThe world "+realm+" is being activated..", 4)
 
                 #load folder of new world from MYSQL
                 world_path = dbworld.get_world(realm)
@@ -384,14 +380,21 @@ def world(name, chatlog, mcpath):
                 #Activate new realm in database
                 dbworld.set_active(realm)
 
+                #return the realm for logging purpose
+                return realm
+
             else:
-                action.say("The world "+realm+" is already active", 1)
+                action.say("The world "+realm+" is already active", 0)
 
         else:
             action.say("The world "+realm+" does not exist.", 0)
 
+
 #this is the function that changes worlds
 def change_world(new_world, path):
+
+    print " <<<  changing realm to "+new_world+" >>>"
+
     #real and tempfile
     properties = path + "server.properties"
     mc_out = "/tmp/tempsett.txt"
@@ -408,8 +411,9 @@ def change_world(new_world, path):
         if search not in line:
             mc_out.write(line)
         else:
-            action.say("[Warning] Server going down for realm-change in 10 seconds", 5)
-            action.say("[Warning] Server going down for realm-change in 5 seconds.", 5)
+            action.say("§e[Warning] §fServer going down for realm-change in 10 seconds", 5)
+            action.say("§e[Warning] §fServer going down for realm-change in 5 seconds.", 5)
+            action.say("\"Now, I am become Death, the destroyer of worlds.\"", 1)
             action.stop_server()
             mc_out.write("level-name="+new_world+"\n")
             action.send_sys("rm " + properties, 0)
