@@ -1,0 +1,10 @@
+New install:
+1. Create a new MySQL database for MM
+2. Run mm_structure.sql
+3. Run mm_commands.sql
+4. Run mm_achievements.sql
+
+Upgrade:
+Run latest upgrade_delta, if any. 
+
+!! Has to be run in order from the version you upgradeing from. !!
