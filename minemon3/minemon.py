@@ -27,9 +27,9 @@ legit = True
 serverstop = False
 
 #### version ####
-version = "3.2 beta 4"
+version = "3.2.1"
 version = str(version)
-print "starting up MineMon "+version
+print "Starting up MineMon "+version
 time.sleep(0.2)
 print "Author: Oscar Carlberg"
 

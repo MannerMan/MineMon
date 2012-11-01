@@ -18,8 +18,9 @@ class playtime(Thread):
     self.time=self.time%self.max_time
 
  def myAction(self):
-    command.playtime()
-   
+    status = command.playtime()
+    if not status:
+      self.stop()
 
  def run(self):
     while self.cont:

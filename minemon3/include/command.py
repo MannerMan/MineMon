@@ -428,18 +428,27 @@ def change_world(new_world, path):
 
 #this is beeing called every 5 minutes for playtime tracking
 def playtime():
-    #check who's online
-    online = action.send("list", 0.1)
-    online = online.split("There are ")[-1]
-    online = online[5:]
-    online = online.split("players online:")[-1]
-    online = online.split()
-    if not online:
-        pass
-        #print "NO USERS ONLINE"
-    else:
-        for user in online:
-            mysql.playtime(user)
+    try:
+        #check who's online
+        online = action.send("list", 0.1)
+        online = online.split("There are ")[-1]
+        online = online[5:]
+        online = online.split("players online:")[-1]
+        online = online.split()
+        if not online:
+            pass
+            #print "NO USERS ONLINE"
+        else:
+            for user in online:
+                mysql.playtime(user)
+
+        #Return OK
+        return True
+    except:
+        print "Failed to send RCON data and reconnect. Server down? stopping timetrack."
+
+        #Return false, will result in timetrack-module shutdown.
+        return False
             
 # this is beeing called when server goes down at the night, for achivement
 def late():
