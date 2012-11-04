@@ -332,7 +332,7 @@ def temphax_unhax(name):
     action.say(name + " - You will be un-haxed!", 3)
     action.say(name + " - You have 10 seconds to get to safety!", 5)
     action.say(name + " - You have 5 seconds to get to safety!", 5)
-    status = action.send("gamemode  0 "+ name, 0)
+    status = action.send("gamemode 0 "+ name, 0)
     if "Can't find user" in status:
         action.say(name+" left during de-hax, temphax-list was restored.", 0)
         #just gonna print something here for now, should return and logg instead
