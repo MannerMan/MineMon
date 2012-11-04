@@ -307,7 +307,7 @@ def temphax(chatlog):
     #else hax target and add to templist
     else:
         who = who.split(" ")[-1]
-        action.send("gamemode " + who + " 1", 0)
+        action.send("gamemode 1 " + who, 0)
         action.say(who+" is now haxed for this session.", 0)
         #templist here
         dbtemphax.add(who)
@@ -320,7 +320,7 @@ def temphax_check(name):
         #user was not temphaxed, do nothing.
         pass
     else:
-        #treading this, takes some time
+        #threading this, takes some time
         #making name global, somewhat temp
         global tempname
         tempname = name
@@ -332,7 +332,7 @@ def temphax_unhax(name):
     action.say(name + " - You will be un-haxed!", 3)
     action.say(name + " - You have 10 seconds to get to safety!", 5)
     action.say(name + " - You have 5 seconds to get to safety!", 5)
-    status = action.send("gamemode " + name + " 0", 0)
+    status = action.send("gamemode  0 "+ name, 0)
     if "Can't find user" in status:
         action.say(name+" left during de-hax, temphax-list was restored.", 0)
         #just gonna print something here for now, should return and logg instead
