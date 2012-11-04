@@ -17,6 +17,26 @@ def get_command_id(command):
     commandid = commandid[0]["id"]
     return commandid
     
+def check_enabled_command(command):
+    #this function checks if the command being run by the user is enabled for the active world
+
+    #Get command id
+    command_id = get_command_id(command)
+
+    #Get current world
+    worldb = world()
+    active_world = worldb.get_current()
+    active_world_id = worldb.get_world_id(active_world)
+
+    enabled = mydb.query("SELECT e.enabled FROM enabled_commands e WHERE e.world_id ='"+active_world_id+"' AND e.command_id ='"+command_id+"'" )
+    enabled = enabled.fetch_row(0, 1)
+    enabled = enabled[0]["enabled"]
+    if enabled == "1":
+        print "command: "+command+" is enabled for world "+active_world
+        return True
+    else:
+        print "command: "+command+" is NOT enabled for world "+active_world
+        return False
 
 def settings(myhost, myuser, mypass, mydb):
     global dbhost
@@ -247,10 +267,16 @@ class world():
         return world_path
 
     def get_current(self):
-        world_current = mydb.query("SELECT w.path from worlds w where w.active ='1';")
+        world_current = mydb.query("SELECT w.world_name from worlds w where w.active ='1';")
         world_current = world_current.fetch_row(0, 1)
-        world_current = world_current[0]["path"]
+        world_current = world_current[0]["world_name"]
         return world_current
+
+    def get_world_id(self, realm):
+        world_id = mydb.query("SELECT w.id from worlds w where w.world_name ='"+realm+"';")
+        world_id = world_id.fetch_row(0, 1)
+        world_id = world_id[0]["id"]
+        return world_id
 
     def set_active(self, realm):
         #inactivate current

@@ -27,7 +27,7 @@ legit = True
 serverstop = False
 
 #### version ####
-version = "3.2.2"
+version = "3.3 Beta 2"
 version = str(version)
 print "Starting up MineMon "+version
 time.sleep(0.2)
@@ -78,16 +78,26 @@ timetrk=timetrack.playtime()
 #### check if enabled & op func ####
 
 def enabled(onoroff):
-    try:
-        setting = config.get('config', onoroff)
-    except:
-        setting = "disabled"
-        print "NO setting entry for "+onoroff+", disabled."
-    if "enabled" in setting:
-        return True
+    #Check if regular command or feature
+    if "!" in onoroff:
+        setting = database.check_enabled_command(onoroff)
+
+        #If not enabled say so.
+        if not setting:
+            action.say("This command has been disabled!", 0)
+        return setting
+
     else:
-        action.say("This command has been disabled!", 0)
-        return False
+        try:
+            setting = config.get('config', onoroff)
+        except:
+            setting = "disabled"
+            print "NO setting entry for "+onoroff+", disabled."
+        if "enabled" in setting:
+            return True
+        else:
+            action.say("This command has been disabled!", 0)
+            return False
 
 def silent_enabled(onoroff):
     try:

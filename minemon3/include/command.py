@@ -393,7 +393,7 @@ def world(name, chatlog, mcpath):
 #this is the function that changes worlds
 def change_world(new_world, path):
 
-    print " <<<  changing realm to "+new_world+" >>>"
+    print " <<<  changing realm to folder: "+new_world+" >>>"
 
     #real and tempfile
     properties = path + "server.properties"
