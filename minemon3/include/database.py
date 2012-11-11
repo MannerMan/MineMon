@@ -38,6 +38,26 @@ def check_enabled_command(command):
         print "command: "+command+" is NOT enabled for world "+active_world
         return False
 
+def check_command_op(command):
+    #This function checks if a specific command needs operator status to be ran.
+
+    #Get command id
+    command_id = get_command_id(command)
+
+    #Get current world
+    worldb = world()
+    active_world = worldb.get_current()
+    active_world_id = worldb.get_world_id(active_world)
+
+    op = mydb.query("SELECT e.op FROM enabled_commands e WHERE e.world_id ='"+active_world_id+"' AND e.command_id ='"+command_id+"'" )
+    op = op.fetch_row(0, 1)
+    op = op[0]["op"]
+    if op == "0":
+        return False
+    else:
+        return True
+
+
 def settings(myhost, myuser, mypass, mydb):
     global dbhost
     global user

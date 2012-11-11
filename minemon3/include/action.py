@@ -97,12 +97,12 @@ class MCRcon:
         self.s.close()
 
     def send(self, command):
-	try:
+        try:
             return self.send_real(2, command)
-	except:
-	    connect(rhost, rport, rpwd)
-	    time.sleep(1)
-	    return self.send_real(2, command)
+        except:
+           connect(rhost, rport, rpwd)
+           time.sleep(1)
+           return self.send_real(2, command)
 
     def send_real(self, out_type, out_data):
         #Send the data
@@ -114,7 +114,7 @@ class MCRcon:
             self.s.send(buff)
         except:
             print "ERROR: COULD NOT SEND RCON DATA!"
-    	    #SKRIV RECONNECT here
+            #SKRIV RECONNECT here
             #worx need doin
 
         #Receive a response

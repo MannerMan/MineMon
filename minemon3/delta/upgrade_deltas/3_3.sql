@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS `enabled_commands` (
   `world_id` int(11) NOT NULL,
   `command_id` int(11) NOT NULL,
   `enabled` tinyint(1) NOT NULL,
+  `op` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `world_id` (`world_id`),
   KEY `command_id` (`command_id`)

@@ -27,7 +27,7 @@ legit = True
 serverstop = False
 
 #### version ####
-version = "3.3 Beta 2"
+version = "3.3 Beta 3"
 version = str(version)
 print "Starting up MineMon "+version
 time.sleep(0.2)
@@ -110,11 +110,21 @@ def silent_enabled(onoroff):
     else:
         return False
 
-def check_op(name):
-    if name.lower() in ops:
+def check_op(name, command):
+    op = database.check_command_op(command)
+
+    #If commmand does not need op, return OK
+    if not op:
         return True
+
     else:
-        action.say("This command is not allowed for non-op's.", 0)
+        #else, check if user is op, and return true
+        if name.lower() in ops:
+            return True
+
+        #if not, deny.
+        else:
+            action.say("This command is not allowed for non-op's.", 0)
 
 #### Trigger on chattlog stuff ####
 def trigger(name):
@@ -122,8 +132,9 @@ def trigger(name):
 
     if "!sheen" in chatlog:
         if enabled("!sheen"):
-            command.sheen()
-            log.save(timestamp, "TEXT", "!sheen", name)
+            if check_op(name, "!sheen"):
+                command.sheen()
+                log.save(timestamp, "TEXT", "!sheen", name)
 
     elif "logged in with entity" in chatlog and not "CONSOLE" in chatlog:
         if enabled("login_manner"):
@@ -137,160 +148,178 @@ def trigger(name):
 
     elif "!hax" in chatlog and not "[Rcon]" in chatlog:
         if enabled("!hax"):
-            if check_op(name):
+            if check_op(name, "!hax"):
                 command.hax(name)
                 log.save(timestamp, "SYSTEM", "!hax", name)
 
     elif "!unhax" in chatlog and not "CONSOLE" in chatlog:
         if enabled("!unhax"):
-            if check_op(name):
+            if check_op(name, "!unhax"):
                 command.unhax(name)
                 log.save(timestamp, "SYSTEM", "!unhax", name)
 
     elif "!adv" in chatlog and not "CONSOLE" in chatlog:
         if enabled("!adv"):
-            if check_op(name):
+            if check_op(name, "!adv"):
                 command.adv(name)
                 log.save(timestamp, "SYSTEM", "!adv", name)
 
     elif "!day" in chatlog:
         if enabled("!day"):
-            command.day()
-            log.save(timestamp, "SYSTEM", "!day", name)
+            if check_op(name, "!day"):
+                command.day()
+                log.save(timestamp, "SYSTEM", "!day", name)
 
     elif "!night" in chatlog:
         if enabled("!night"):
-            command.night()
-            log.save(timestamp, "SYSTEM", "!night", name)
+            if check_op(name, "!night"):
+                command.night()
+                log.save(timestamp, "SYSTEM", "!night", name)
 
     elif "!tp" in chatlog and not "CONSOLE" in chatlog:
         if enabled("!tp"):
-            who = command.tp(name, chatlog)
-            log.save2(timestamp, "TEXT", "!tp", name, "] -> [", who)
+            if check_op(name, "!tp"):
+                who = command.tp(name, chatlog)
+                log.save2(timestamp, "TEXT", "!tp", name, "] -> [", who)
 
     elif "!pull" in chatlog and not "CONSOLE" in chatlog:
         if enabled("!pull"):
-            if check_op(name):
+            if check_op(name, "!pull"):
                 who = command.pull(name, chatlog)
                 log.save2(timestamp, "TEXT", "!pull", name, "] <- [", who)
 
     elif "!map" in chatlog:
         if enabled("!map"):
-            command.map(mapurl)
-            log.save(timestamp, "SYSTEM", "!map", name)
+            if check_op(name, "!map"):
+                command.map(mapurl)
+                log.save(timestamp, "SYSTEM", "!map", name)
 
     elif "!help" in chatlog:
         if enabled("!help"):
-            command.help(helpurl)
-            log.save(timestamp, "SYSTEM", "!help", name)
+            if check_op(name, "!help"):
+                command.help(helpurl)
+                log.save(timestamp, "SYSTEM", "!help", name)
 
     elif "!version" in chatlog:
-        action.say("Running MineMon version: " + version+" by Oscar Carlberg", 0)
-        log.save(timestamp, "SYSTEM", "!version", name)
+        if enabled("!version"):
+            if check_op(name, "!version"):
+                action.say("Running MineMon version: " + version+" by Oscar Carlberg", 0)
+                log.save(timestamp, "SYSTEM", "!version", name)
 
     elif "!list" in chatlog:
         action.say("Deprecated. Press Tab on your keyboard", 0)
 
     elif "!roll" in chatlog and not "CONSOLE" in chatlog:
         if enabled("!roll"):
-            roll = command.roll(name)
-            log.save2(timestamp, "TEXT", "!roll", name, "] [", roll)
+            if check_op(name, "!roll"):
+                roll = command.roll(name)
+                log.save2(timestamp, "TEXT", "!roll", name, "] [", roll)
 
     elif "!rain" in chatlog and not "CONSOLE" in chatlog:
         if enabled("!rain"):
-            command.rain()
-            log.save(timestamp, "SYSTEM", "!rain", name)
+            if check_op(name, "!rain"):
+                command.rain()
+                log.save(timestamp, "SYSTEM", "!rain", name)
 
     elif "!xp" in chatlog and not "CONSOLE" in chatlog:
         if enabled("!xp"):
-            if check_op(name):
+            if check_op(name, "!xp"):
                 command.xp(name)
                 log.save(timestamp, "TEXT", "!xp", name)
 
     elif "!kit" in chatlog and not "CONSOLE" in chatlog:
         if enabled("!kit"):
-            command.kit(name)
-            log.save(timestamp, "TEXT", "!kit", name)
+            if check_op(name, "!kit"):
+                command.kit(name)
+                log.save(timestamp, "TEXT", "!kit", name)
 
     elif "!leatherset" in chatlog and not "CONSOLE" in chatlog:
         if enabled("!leatherset"):
-            command.leatherset(name)
-            log.save(timestamp, "TEXT", "!leatherset", name)
+            if check_op(name, "!leatherset"):
+                command.leatherset(name)
+                log.save(timestamp, "TEXT", "!leatherset", name)
 
     elif "!diamondset" in chatlog and not "CONSOLE" in chatlog:
         if enabled("!diamondset"):
-            if check_op(name):
+            if check_op(name, "!diamondset"):
                 command.diamondset(name)
                 log.save(timestamp, "TEXT", "!diamondset", name)
 
     elif "!bow" in chatlog and not "CONSOLE" in chatlog:
         if enabled("!bow"):
-            command.bow(name)
-            log.save(timestamp, "TEXT", "!bow", name)
+            if check_op(name, "!bow"):
+                command.bow(name)
+                log.save(timestamp, "TEXT", "!bow", name)
 
     elif "!train" in chatlog and not "CONSOLE" in chatlog:
         if enabled("!train"):
-            command.train(name)
-            log.save(timestamp, "TEXT", "!train", name)
+            if check_op(name, "!train"):
+                command.train(name)
+                log.save(timestamp, "TEXT", "!train", name)
 
     elif "!sleep" in chatlog and not "CONSOLE" in chatlog:
         if enabled("!sleep"):
-            command.sleep(name)
-            log.save(timestamp, "TEXT", "!sleep", name)
+            if check_op(name, "!sleep"):
+                command.sleep(name)
+                log.save(timestamp, "TEXT", "!sleep", name)
 
     elif "!rail" in chatlog and not "CONSOLE" in chatlog:
         if enabled("!rail"):
-            command.rail(name)
-            log.save(timestamp, "TEXT", "!rail", name)
+            if check_op(name, "!rail"):
+                command.rail(name)
+                log.save(timestamp, "TEXT", "!rail", name)
 
     elif "!food" in chatlog and not "CONSOLE" in chatlog:
         if enabled("!food"):
-            command.food(name)
-            log.save(timestamp, "TEXT", "!food", name)
+            if check_op(name, "!food"):
+                command.food(name)
+                log.save(timestamp, "TEXT", "!food", name)
 
     elif "!item" in chatlog and not "[Rcon]" in chatlog:
         if enabled("!item"):
-            if check_op(name):
+            if check_op(name, "!item"):
                 item = command.item(name, chatlog)
                 log.save2(timestamp, "TEXT", "!item", name, "] [", item)
 
     elif "!restart" in chatlog and not "CONSOLE" in chatlog:
         if enabled("!restart"):
-            if check_op(name):
+            if check_op(name, "!restart"):
                 command.restart()
                 log.save(timestamp, "SYSTEM", "!restart", name)
 
     elif "!monsters" in chatlog:
         if enabled("!monsters"):
-            if check_op(name):
+            if check_op(name, "!monsters"):
                 onoff = command.monsters(mcpath)
                 log.save2(timestamp, "SYSTEM", "!monsters", name, "] [", onoff)
 
     elif "!update" in chatlog:
         if enabled("!update"):
-            if check_op(name) or "CONSOLE" in chatlog:
+            if check_op(name, "update") or "CONSOLE" in chatlog:
                 status = command.update(mcpath, mcport)
                 log.save2(timestamp, "SYSTEM", "!update", name, "] [", status)
 
     elif "!temphax" in chatlog and not "CONSOLE" in chatlog:
         if enabled("!temphax"):
-            if check_op(name):
+            if check_op(name, "!temphax"):
                 who = command.temphax(chatlog)
                 log.save2(timestamp, "TEXT", "!temphax", name, "] -> [", who)
 
     elif "!report" in chatlog and not "CONSOLE" in chatlog:
         if enabled("!report"):
-            command.mail(name, chatlog, False)
-            log.save(timestamp, "SYSTEM", "!report", name)
+            if check_op(name, "!report"):
+                command.mail(name, chatlog, False)
+                log.save(timestamp, "SYSTEM", "!report", name)
 
     elif "!played" in chatlog and not "CONSOLE" in chatlog:
         if enabled("!played"):
-            command.played(name)
-            log.save(timestamp, "TEXT", "!played", name)
+            if check_op(name, "!played"):
+                command.played(name)
+                log.save(timestamp, "TEXT", "!played", name)
 
     elif "!world" in chatlog and not "CONSOLE" in chatlog:
         if enabled("!world"):
-            if check_op(name):
+            if check_op(name, "!world"):
                 success = command.world(name, chatlog, mcpath)
                 if success:
                     log.save2(timestamp, "SYSTEM", "!world", name, "] [", success)
