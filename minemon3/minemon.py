@@ -27,7 +27,7 @@ legit = True
 serverstop = False
 
 #### version ####
-version = "3.3 Beta 5"
+version = "3.3 Beta 6"
 version = str(version)
 print "Starting up MineMon "+version
 time.sleep(0.2)
@@ -130,7 +130,13 @@ def check_op(name, command):
 def trigger(name):
     global serverstop
 
-    if "!sheen" in chatlog:
+    if "!help" in chatlog:
+        if enabled("!help"):
+            if check_op(name, "!help"):
+                command.help(helpurl, chatlog)
+                log.save(timestamp, "SYSTEM", "!help", name)
+
+    elif "!sheen" in chatlog:
         if enabled("!sheen"):
             if check_op(name, "!sheen"):
                 command.sheen()
@@ -194,21 +200,19 @@ def trigger(name):
                 command.map(mapurl)
                 log.save(timestamp, "SYSTEM", "!map", name)
 
-    elif "!help" in chatlog:
-        if enabled("!help"):
-            if check_op(name, "!help"):
-                command.help(helpurl, chatlog)
-                log.save(timestamp, "SYSTEM", "!help", name)
-
     elif "!version" in chatlog:
         if enabled("!version"):
             if check_op(name, "!version"):
+                #move this to "command" file
                 action.say("Running MineMon version: " + version+" by Oscar Carlberg", 0.2)
                 action.say("New in this release:", 0.5)
                 changes = database.get_changelog()
-                for row in changes:
-                    print changes
-                    #yeah fix this
+                changes = changes[0]['changes']
+                changes = changes.split("\n")
+
+                for info in changes:
+                    action.say("§a"+info, 0.2)
+
                 log.save(timestamp, "SYSTEM", "!version", name)
 
     elif "!list" in chatlog:

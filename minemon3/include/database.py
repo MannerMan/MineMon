@@ -110,9 +110,7 @@ class insert():
         if not help:
             return False
         else:
-            print help
-            #write function that returns legit data here
-            return "help here"
+            return help[0]
 
     def upd_version(self, name, version):
         mydb.query("""UPDATE `"""+db+"""`.`users` SET `version` = '"""+version+"""' WHERE `users`.`name` ='"""+name+"';")
@@ -326,7 +324,7 @@ class world():
         all_worlds = all_worlds.fetch_row(0, 1)
         alles = []
         for world in all_worlds:
-             alles.append(world[0]["name"])
+             alles.append(world["world_name"])
 
         return alles
             

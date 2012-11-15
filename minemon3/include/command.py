@@ -127,17 +127,25 @@ def map(url):
 def help(url, chatlog):
     command = chatlog
     command = command[28:]
-    command = command.split("> !tp")[-1]
+    command = command.split("> !help")[-1]
     command = command.replace("\n", "")
-    if command = "":
-        action.say("You can use !help !COMMAND to get detailed information about specific a specific command")
+    if command == "":
+        action.say("You can use !help !COMMAND to get detailed information about a specific command", 0.2)
         action.say("See all available commands at: "+url, 0)
     else:
+        command = command.split(" ")[-1]
         result = mysql.load_help(command)
         if not result:
-            action.say("Command not found")
+            action.say("Command not found", 0)
         else:
-            print result
+            action.say(result["desc"], 0.2)
+            syntax = result["syntax"]
+            syntax = syntax.split("\n")
+            action.say("§aSyntax: §e"+syntax[0], 0.2)
+            syntax = iter(syntax)
+            next(syntax)
+            for s in syntax:
+                action.say(s, 0.2)
 
 def roll(name):
     roll = random.randint(1, 100)
@@ -373,7 +381,7 @@ def world(name, chatlog, mcpath):
         all_worlds = dbworld.get_all_worlds()
         action.say("Available worlds: ", 0.5)
         for w in all_worlds:
-            action.say(w, 0.2)
+            action.say("§a"+w, 0.2)
 
     else:
 

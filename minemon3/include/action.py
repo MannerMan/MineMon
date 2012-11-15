@@ -52,7 +52,7 @@ def connect(host, port, pwd):
     r = MCRcon(host, int(port), pwd)
 
 def say(msg, wait):
-    r.send("say §5"+msg)
+    r.send("say §d"+msg)
     time.sleep(int(wait))
 
 def send(command, wait):

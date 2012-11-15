@@ -37,8 +37,8 @@ ALTER TABLE `enabled_commands` ADD FOREIGN KEY ( `command_id` ) REFERENCES `comm
 ALTER TABLE `commands` DROP `enabled`;
 ALTER TABLE `commands` DROP `op`;
 
-ALTER TABLE `commands` ADD `desc` TEXT NOT NULL 
-ALTER TABLE `commands` ADD `syntax` TEXT NOT NULL 
+ALTER TABLE `commands` ADD `desc` TEXT NOT NULL;
+ALTER TABLE `commands` ADD `syntax` TEXT NOT NULL;
 
 UPDATE `commands` SET `desc` = 'Prints random Charlie Sheen quote',
 `syntax` = '!sheen' WHERE `commands`.`id` =1;
@@ -87,7 +87,7 @@ UPDATE `commands` SET `desc` = 'Give player five grilled porks',
 UPDATE `commands` SET `desc` = 'Give player a stack of specified item',
 `syntax` = '!item NUMBER
 Example: !item 12
-Gives player a stack of item 12' WHERE `commands`.`id` =21
+Gives player a stack of item 12' WHERE `commands`.`id` =21;
 UPDATE `commands` SET `desc` = 'Restarts the server, takes about 15 seconds.',
 `syntax` = '!restart' WHERE `commands`.`id` =22;
 UPDATE `commands` SET `desc` = 'Download latest version of minecraft server and compares with the current installed version.',
