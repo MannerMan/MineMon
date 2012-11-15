@@ -119,3 +119,15 @@ CREATE TABLE IF NOT EXISTS `version` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
+INSERT INTO `version` (
+`id` ,
+`version` ,
+`current` ,
+`changes`
+)
+VALUES (
+NULL , '3.3', '1', 'Commands can now be enabled/disabled per world!
+This applies to OP-requirement for commands aswell
+!help can now be used to get help for specific command
+!world without parameters prints all available worlds'
+);

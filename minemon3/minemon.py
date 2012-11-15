@@ -27,7 +27,7 @@ legit = True
 serverstop = False
 
 #### version ####
-version = "3.3 Beta 4"
+version = "3.3 Beta 5"
 version = str(version)
 print "Starting up MineMon "+version
 time.sleep(0.2)
@@ -84,7 +84,7 @@ def enabled(onoroff):
 
         #If not enabled say so.
         if not setting:
-            action.say("This command has been disabled!", 0)
+            action.say("This command has been disabled for this world!", 0)
         return setting
 
     else:
@@ -96,7 +96,7 @@ def enabled(onoroff):
         if "enabled" in setting:
             return True
         else:
-            action.say("This command has been disabled!", 0)
+            action.say("This command has been disabled for this world!", 0)
             return False
 
 def silent_enabled(onoroff):
@@ -203,7 +203,12 @@ def trigger(name):
     elif "!version" in chatlog:
         if enabled("!version"):
             if check_op(name, "!version"):
-                action.say("Running MineMon version: " + version+" by Oscar Carlberg", 0)
+                action.say("Running MineMon version: " + version+" by Oscar Carlberg", 0.2)
+                action.say("New in this release:", 0.5)
+                changes = database.get_changelog()
+                for row in changes:
+                    print changes
+                    #yeah fix this
                 log.save(timestamp, "SYSTEM", "!version", name)
 
     elif "!list" in chatlog:

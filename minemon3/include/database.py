@@ -57,6 +57,11 @@ def check_command_op(command):
     else:
         return True
 
+def get_changelog():
+    changes = mydb.query("SELECT v.changes FROM version v WHERE v.current = '1'")
+    changes = changes.fetch_row(0, 1)
+    return changes
+
 
 def settings(myhost, myuser, mypass, mydb):
     global dbhost
