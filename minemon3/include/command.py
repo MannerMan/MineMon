@@ -124,8 +124,20 @@ def pull(name, chatlog):
 def map(url):
     action.say("See full map at: "+url, 0)
 
-def help(url):
-    action.say("See full commandlist at: "+url, 0)
+def help(url, chatlog):
+    command = chatlog
+    command = command[28:]
+    command = command.split("> !tp")[-1]
+    command = command.replace("\n", "")
+    if command = "":
+        action.say("You can use !help !COMMAND to get detailed information about specific a specific command")
+        action.say("See all available commands at: "+url, 0)
+    else:
+        result = mysql.load_help(command)
+        if not result:
+            action.say("Command not found")
+        else:
+            print result
 
 def roll(name):
     roll = random.randint(1, 100)
@@ -356,9 +368,12 @@ def world(name, chatlog, mcpath):
     realm = realm.replace("\n", "")
     realm = realm.replace(" ", "")
 
-    #if no realm notify
+    #if no realm send all available
     if realm == "":
-        action.say("Need a realm!", 0)
+        all_worlds = dbworld.get_all_worlds()
+        action.say("Available worlds: ", 0.5)
+        for w in all_worlds:
+            action.say(w, 0.2)
 
     else:
 

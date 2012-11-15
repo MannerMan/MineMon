@@ -27,7 +27,7 @@ legit = True
 serverstop = False
 
 #### version ####
-version = "3.3 Beta 3"
+version = "3.3 Beta 4"
 version = str(version)
 print "Starting up MineMon "+version
 time.sleep(0.2)
@@ -197,7 +197,7 @@ def trigger(name):
     elif "!help" in chatlog:
         if enabled("!help"):
             if check_op(name, "!help"):
-                command.help(helpurl)
+                command.help(helpurl, chatlog)
                 log.save(timestamp, "SYSTEM", "!help", name)
 
     elif "!version" in chatlog:

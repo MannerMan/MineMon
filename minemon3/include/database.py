@@ -98,6 +98,17 @@ data = database()
     
 class insert():
     
+    def load_help(self, command):
+        help = mydb.query("SELECT c.desc, c.syntax FROM commands c WHERE c.name=\""+command+"\";")
+        help = help.fetch_row(0, 1)
+
+        if not help:
+            return False
+        else:
+            print help
+            #write function that returns legit data here
+            return "help here"
+
     def upd_version(self, name, version):
         mydb.query("""UPDATE `"""+db+"""`.`users` SET `version` = '"""+version+"""' WHERE `users`.`name` ='"""+name+"';")
     
@@ -304,5 +315,14 @@ class world():
 
         #activate new
         mydb.query("UPDATE worlds w SET w.active = 1, w.used = w.used + 1, w.timestamp = CURRENT_TIMESTAMP WHERE w.world_name ='"+realm+"'")
+
+    def get_all_worlds(self):
+        all_worlds = mydb.query("SELECT w.world_name from worlds w")
+        all_worlds = all_worlds.fetch_row(0, 1)
+        alles = []
+        for world in all_worlds:
+             alles.append(world[0]["name"])
+
+        return alles
             
     
