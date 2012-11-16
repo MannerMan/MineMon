@@ -27,7 +27,7 @@ legit = True
 serverstop = False
 
 #### version ####
-v = "3.3.2"
+v = "3.3.3"
 print "Starting up MineMon "+v
 time.sleep(0.2)
 print "Author: Oscar Carlberg"
@@ -143,7 +143,7 @@ def trigger(name):
 
     elif "logged in with entity" in chatlog and not "CONSOLE" in chatlog:
         if enabled("login_manner"):
-            player = command.login(chatlog, version, helpurl)
+            player = command.login(chatlog, v, helpurl)
             log.save(timestamp, "GREEN", "Login:", player)
 
     elif "lost connection:" in chatlog and not "CONSOLE" in chatlog:
