@@ -23,6 +23,16 @@ def sheen():
     bro = (sheenstuff[win])
     action.say(bro, 0)
 
+def version():
+    action.say("Running MineMon version: " + version+" by Oscar Carlberg", 0.2)
+    action.say("New in this release:", 0.5)
+    changes = database.get_changelog()
+    changes = changes[0]['changes']
+    changes = changes.split("\n")
+
+    for info in changes:
+        action.say("§a"+info, 0.2)
+
 def login(chatlog, version, helpurl):
 
     #get nick
@@ -56,7 +66,7 @@ def login(chatlog, version, helpurl):
     if vermatch:
         time.sleep(1)
         action.say("§bA §cnew version§b of MineMon was deployed since your last visit!", 2)
-        action.say("§bPlease see §c"+helpurl+"§b for changelog", 0.2)
+        action.say("§bUse §c!version§b for a summary of changes", 0.2)
         mysql.upd_version(name, version)
 
     #check if user was temphaxed

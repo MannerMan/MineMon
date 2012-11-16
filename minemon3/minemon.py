@@ -27,7 +27,7 @@ legit = True
 serverstop = False
 
 #### version ####
-version = "3.3 Beta 6"
+version = "3.3"
 version = str(version)
 print "Starting up MineMon "+version
 time.sleep(0.2)
@@ -203,16 +203,7 @@ def trigger(name):
     elif "!version" in chatlog:
         if enabled("!version"):
             if check_op(name, "!version"):
-                #move this to "command" file
-                action.say("Running MineMon version: " + version+" by Oscar Carlberg", 0.2)
-                action.say("New in this release:", 0.5)
-                changes = database.get_changelog()
-                changes = changes[0]['changes']
-                changes = changes.split("\n")
-
-                for info in changes:
-                    action.say("§a"+info, 0.2)
-
+                command.version()
                 log.save(timestamp, "SYSTEM", "!version", name)
 
     elif "!list" in chatlog:
@@ -463,6 +454,3 @@ action.say("§cMinecraft Monitor Version "+version+" stopped!", 0)
 
 #log the shutdown
 log.raw_log("Minecraft Monitor Version "+version+" stopped!")
-
-#lol = action.send("list")
-#print lol
