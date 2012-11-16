@@ -111,6 +111,20 @@ UPDATE `commands` SET `desc` = 'Restarts server and change world',
 `syntax` = '!world WORLDNAME
 Use !world without parameters to list available worlds.' WHERE `commands`.`id` =30;
 
+INSERT INTO `commands` (
+`id` ,
+`name` ,
+`desc` ,
+`syntax`
+)
+VALUES (
+NULL , '!clear', 'Clears entire player inventory', '!clear
+USE WITH CARE!'
+);
+
+
+INSERT INTO `commands` (`id`, `name`, `desc`, `syntax`) VALUES (NULL, '!spawn', 'Sets player spawnpoint to current position', '!spawn');
+
 CREATE TABLE IF NOT EXISTS `version` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `version` varchar(15) NOT NULL,
@@ -129,5 +143,7 @@ VALUES (
 NULL , '3.3', '1', 'Commands can now be enabled/disabled per world!
 This applies to OP-requirement for commands aswell
 !help can now be used to get help for specific command
-!world without parameters prints all available worlds'
+!world without parameters prints all available worlds
+!clear - clears inventory
+!spawn - registers spawnpoint'
 );

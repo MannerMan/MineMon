@@ -68,6 +68,9 @@ NULL , 'WORLD_ID_HERE', '28', '1', '0'
 NULL , 'WORLD_ID_HERE', '29', '1', '1'
 ), (
 NULL , 'WORLD_ID_HERE', '30', '1', '1'
+), (
+NULL , 'WORLD_ID_HERE', '31', '1', '1'
+), (
+NULL , 'WORLD_ID_HERE', '32', '1', '1'
 )
-
 

@@ -23,8 +23,8 @@ def sheen():
     bro = (sheenstuff[win])
     action.say(bro, 0)
 
-def version():
-    action.say("Running MineMon version: " + version+" by Oscar Carlberg", 0.2)
+def version(v):
+    action.say("Running MineMon version: " + v+" by Oscar Carlberg", 0.2)
     action.say("New in this release:", 0.5)
     changes = database.get_changelog()
     changes = changes[0]['changes']
@@ -422,6 +422,13 @@ def world(name, chatlog, mcpath):
         else:
             action.say("The world "+realm+" does not exist.", 0)
 
+
+def clear(name):
+    action.send("clear "+name, 0)
+
+def spawn(name):
+    action.send("spawnpoint "+name, 0.2)
+    action.say("New spawnpoint registered!", 0)
 
 #this is the function that changes worlds
 def change_world(new_world, path):

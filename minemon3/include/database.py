@@ -32,10 +32,10 @@ def check_enabled_command(command):
     enabled = enabled.fetch_row(0, 1)
     enabled = enabled[0]["enabled"]
     if enabled == "1":
-        print "command: "+command+" is enabled for world "+active_world
+        #print "command: "+command+" is enabled for world "+active_world
         return True
     else:
-        print "command: "+command+" is NOT enabled for world "+active_world
+        #print "command: "+command+" is NOT enabled for world "+active_world
         return False
 
 def check_command_op(command):

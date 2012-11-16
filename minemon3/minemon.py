@@ -27,9 +27,8 @@ legit = True
 serverstop = False
 
 #### version ####
-version = "3.3"
-version = str(version)
-print "Starting up MineMon "+version
+v = "3.3.1"
+print "Starting up MineMon "+v
 time.sleep(0.2)
 print "Author: Oscar Carlberg"
 
@@ -69,7 +68,7 @@ except:
     sys.exit()
 
 action.load(gmail, gpw, mailrcvr, screen, mc_mem)
-action.say("§aMinecraft Monitor Version "+version+" now running!", 1)
+action.say("§aMinecraft Monitor Version "+v+" now running!", 1)
 action.say("§aType !help for available commands", 0)
 
 ops = action.load_op(mcpath)
@@ -203,7 +202,7 @@ def trigger(name):
     elif "!version" in chatlog:
         if enabled("!version"):
             if check_op(name, "!version"):
-                command.version()
+                command.version(v)
                 log.save(timestamp, "SYSTEM", "!version", name)
 
     elif "!list" in chatlog:
@@ -324,6 +323,19 @@ def trigger(name):
                 if success:
                     log.save2(timestamp, "SYSTEM", "!world", name, "] [", success)
 
+    elif "!clear" in chatlog and not "CONSOLE" in chatlog:
+        if enabled("!clear"):
+            if check_op(name, "!clear"):
+                command.clear(name)
+                log.save(timestamp, "TEXT", "!clear", name)
+
+    elif "!spawn" in chatlog and not "CONSOLE" in chatlog:
+        if enabled("!spawn"):
+            if check_op(name, "!spawn"):
+                command.spawn(name)
+                log.save(timestamp, "TEXT", "!spawn", name)
+
+
     elif "Opped" in chatlog or "De-opped" in chatlog:
         global ops
         ops = action.load_op(mcpath)
@@ -434,7 +446,7 @@ if silent_enabled("timetrack"):
     timetrk.start()
 
 #log the start
-log.raw_log("Minecraft Monitor Version "+version+" started!")
+log.raw_log("Minecraft Monitor Version "+v+" started!")
 
 #### exit ####
 print "press any key to exit"
@@ -450,7 +462,7 @@ if enabled("timetrack"):
     except:
         print "Could not stop timetracking, although its enabled - perhaps MC is not running?"
 
-action.say("§cMinecraft Monitor Version "+version+" stopped!", 0)
+action.say("§cMinecraft Monitor Version "+v+" stopped!", 0)
 
 #log the shutdown
-log.raw_log("Minecraft Monitor Version "+version+" stopped!")
+log.raw_log("Minecraft Monitor Version "+v+" stopped!")
