@@ -33,7 +33,7 @@ def version(v):
     for info in changes:
         action.say("§a"+info, 0.2)
 
-def login(chatlog, version, helpurl):
+def login(chatlog, v, helpurl):
 
     #get nick
     name = chatlog
@@ -59,15 +59,15 @@ def login(chatlog, version, helpurl):
 
     #greet and return nick
     action.say("§a"+hail + name + "! Online: " + online, 0)
-    mysql.login(name, version)
+    mysql.login(name, v)
 
     #check if a new MM version was deployed since last visit.
-    vermatch = mysql.version(name, version)
+    vermatch = mysql.version(name, v)
     if vermatch:
         time.sleep(1)
         action.say("§bA §cnew version§b of MineMon was deployed since your last visit!", 2)
         action.say("§bUse §c!version§b for a summary of changes", 0.2)
-        mysql.upd_version(name, version)
+        mysql.upd_version(name, v)
 
     #check if user was temphaxed
     temphax_check(name)
