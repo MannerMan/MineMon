@@ -143,6 +143,7 @@ def help(url, chatlog):
     if command == "":
         action.say("You can use !help !COMMAND to get detailed information about a specific command", 0.2)
         action.say("See all available commands at: "+url, 0)
+        return "NONE"
     else:
         command = command.split(" ")[-1]
         result = mysql.load_help(command)
@@ -157,6 +158,8 @@ def help(url, chatlog):
             next(syntax)
             for s in syntax:
                 action.say(s, 0.2)
+
+        return command
 
 def roll(name):
     roll = random.randint(1, 100)
@@ -478,6 +481,7 @@ def gateway(name, chatlog):
         action.say(" delete", 0.2)
         action.say(" public", 0.2)
         action.say(" private", 0.2)
+        return "] [", "NONE"
 
     else:
         mode = mode.split(" ")[1]
@@ -493,15 +497,19 @@ def gateway(name, chatlog):
                 action.say("Possible completions:", 0.2)
                 action.say(" public", 0.2)
                 action.say(" private", 0.2)
+                return "] list [", "NONE"
             else:
                 puborpriv = puborpriv.split(" ")[1]
 
                 if puborpriv == "public":
                     gw.list_pub()
+                    return "] list [", "public"
                 elif puborpriv == "private":
                     gw.list_priv(name)
+                    return "] list [", "private"
                 else:
                     action.say("!gateway list can only be followed by 'public' or 'private'", 0)
+                    return "] list [", puborpriv
 
         # or if !gateway private or public
         elif mode == "private" or mode == "public":
@@ -513,6 +521,7 @@ def gateway(name, chatlog):
             if gwname == "":
                 action.say("Possible completions:", 0.2)
                 action.say(" <name of gateway>", 0)
+                return "] "+mode+" [", "NONE"
             else:
                 gwname = gwname.split(" ")[1]
                 
@@ -542,18 +551,22 @@ def gateway(name, chatlog):
 
                             gw.add_gw(name, gwname, mode, x, y, z)
                             action.say(mode+" gateway "+gwname+" was registered successfully to coordinates: "+x+" "+y+" "+z, 0)
+                            return "] "+mode+" [", gwname
 
                         except:
                             action.say("Validation of coordinates failed.", 0.2)
                             action.say("Please only use integers in the format x z y", 0.2)
+                            return "] "+mode+" [", "COORD-FAIL"
 
                     else:
                         action.say("That gateway already exists!", 0.2)
                         action.say("delete it using !gateway delete "+mode+" "+gwname, 0)
+                        return "] "+mode+" [", gwname
 
                 else:
                     action.say("Maximum amount of "+mode+" gateways have been registered", 0.2)
                     action.say("Delete gateways using !gateway delete", 0)
+                    return "] "+mode+" [", gwname
 
         elif mode == "delete":
             #extract public or private
@@ -565,6 +578,7 @@ def gateway(name, chatlog):
                 action.say("Possible completions:", 0.2)
                 action.say(" public", 0.2)
                 action.say(" private", 0.2)
+                return "] delete [", "NONE"
             else:
                 puborpriv = puborpriv.split(" ")[1]
 
@@ -577,6 +591,7 @@ def gateway(name, chatlog):
                     if gwname == "":
                         action.say("Possible completions:", 0.2)
                         action.say(" <name of gateway>", 0)
+                        return "] delete "+puborpriv+" [", "NONE"
                     else:
                         gwname = gwname.split(" ")[1]
                         
@@ -584,12 +599,16 @@ def gateway(name, chatlog):
                             if gw.owner(puborpriv, name, gwname):
                                 dbgateway.delete(name, gwname, puborpriv)
                                 action.say("Successfully deleted "+puborpriv+" gateway "+gwname, 0)
+                                return "] delete "+puborpriv+" [", gwname
                             else:
                                 action.say(puborpriv+" gateway "+gwname+" was not created by you!", 0)
+                                return "] delete "+puborpriv+" [", gwname
                         else:
-                            action.say(puborpriv+" gateway "+gwname+" does not exist.", 0)         
+                            action.say(puborpriv+" gateway "+gwname+" does not exist.", 0)    
+                            return "] delete "+puborpriv+" [", gwname     
                 else:
                     action.say("!gateway delete can only be followed by 'public' or 'private'", 0)
+                    return "] delete "+puborpriv+" [", "NONE"
 
 
         else:
@@ -598,9 +617,7 @@ def gateway(name, chatlog):
             action.say(" delete", 0.2)
             action.say(" public", 0.2)
             action.say(" private", 0.2)
-
-    #temp, fix dat shiet
-    return "test"
+            return "] [", "NONE"
 
 def dial(name, chatlog):
     gwname = chatlog
@@ -626,9 +643,9 @@ def dial(name, chatlog):
             action.say("That gateway does not exist!", 0)
             return gwname
 
-def travel(name, chatlog):
+def warp(name, chatlog):
     gwname = chatlog
-    gwname = gwname.split("> !travel")[-1]
+    gwname = gwname.split("> !warp")[-1]
     gwname = gwname.replace("\n", "")
     if gwname == "":
         action.say("Please provide a valid gateway", 0.2)

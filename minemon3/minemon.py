@@ -27,7 +27,7 @@ legit = True
 serverstop = False
 
 #### version ####
-v = "3.4 beta 1"
+v = "3.4 beta 2"
 print "Starting up MineMon "+v
 time.sleep(0.2)
 print "Author: Oscar Carlberg"
@@ -132,8 +132,8 @@ def trigger(name):
     if "!help" in chatlog:
         if enabled("!help"):
             if check_op(name, "!help"):
-                command.help(helpurl, chatlog)
-                log.save(timestamp, "SYSTEM", "!help", name)
+                helpcmnd = command.help(helpurl, chatlog)
+                log.save2(timestamp, "SYSTEM", "!help", name, "] [", helpcmnd)
 
     elif "!sheen" in chatlog:
         if enabled("!sheen"):
@@ -339,7 +339,7 @@ def trigger(name):
         if enabled("!gateway"):
             if check_op(name, "!gateway"):
                 gw = command.gateway(name, chatlog)
-                log.save2(timestamp, "TEXT", "!gateway", name, "] [", gw)
+                log.save2(timestamp, "TEXT", "!gateway", name, gw[0], gw[1])
 
     elif "!dial" in chatlog and not "CONSOLE" in chatlog:
         if enabled("!dial"):
@@ -347,11 +347,11 @@ def trigger(name):
                 dest = command.dial(name, chatlog)
                 log.save2(timestamp, "TEXT", "!dial", name, "] -> [", dest)
 
-    elif "!travel" in chatlog and not "CONSOLE" in chatlog:
-        if enabled("!travel"):
-            if check_op(name, "!travel"):
-                dest = command.travel(name, chatlog)
-                log.save2(timestamp, "TEXT", "!travel", name, "] -> [", dest)
+    elif "!warp" in chatlog and not "CONSOLE" in chatlog:
+        if enabled("!warp"):
+            if check_op(name, "!warp"):
+                dest = command.warp(name, chatlog)
+                log.save2(timestamp, "TEXT", "!warp", name, "] -> [", dest)
 
 
     elif "Opped" in chatlog or "De-opped" in chatlog:

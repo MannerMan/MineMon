@@ -59,7 +59,10 @@ NULL , '!gateway', 'Registers public or private gateway used for teleportation',
 MODE = public or private
 NAME = name of gateway
 COORDS = coordinates to save, x y z 
-example: !gateway public centrum 100 100 100'
+example: !gateway public centrum 100 100 100
+example: !gateway delete public centrum
+example: !gateway list private
+Tip: Press F3 to see your current coordinates'
 );
 
 INSERT INTO `commands` (
@@ -80,6 +83,12 @@ INSERT INTO `commands` (
 `syntax`
 )
 VALUES (
-NULL , '!travel', 'Teleports player to public registerd gateway.', '!travel GATEWAY 
+NULL , '!warp', 'Teleports player to public registerd gateway.', '!warp GATEWAY 
 Use !help !gateway to get instructions on how to register new gateways.'
 );
+
+INSERT INTO `version` (`id`, `version`, `current`, `changes`) VALUES (NULL, '3.4', '1', 'Coordination-based teleportation system added! 
+You can register private coordinates unique to you, or public, for anyone to use.
+!gateway - Used for registration, listing and deletion of coordinates 
+!dial - Used for teleportation to private coordinates
+!warp - Used for teleportation to public coordinates');
