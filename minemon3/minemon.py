@@ -27,7 +27,7 @@ legit = True
 serverstop = False
 
 #### version ####
-v = "3.3.3"
+v = "3.4 beta 1"
 print "Starting up MineMon "+v
 time.sleep(0.2)
 print "Author: Oscar Carlberg"
@@ -334,6 +334,24 @@ def trigger(name):
             if check_op(name, "!spawn"):
                 command.spawn(name)
                 log.save(timestamp, "TEXT", "!spawn", name)
+
+    elif "!gateway" in chatlog and not "CONSOLE" in chatlog:
+        if enabled("!gateway"):
+            if check_op(name, "!gateway"):
+                gw = command.gateway(name, chatlog)
+                log.save2(timestamp, "TEXT", "!gateway", name, "] [", gw)
+
+    elif "!dial" in chatlog and not "CONSOLE" in chatlog:
+        if enabled("!dial"):
+            if check_op(name, "!dial"):
+                dest = command.dial(name, chatlog)
+                log.save2(timestamp, "TEXT", "!dial", name, "] -> [", dest)
+
+    elif "!travel" in chatlog and not "CONSOLE" in chatlog:
+        if enabled("!travel"):
+            if check_op(name, "!travel"):
+                dest = command.travel(name, chatlog)
+                log.save2(timestamp, "TEXT", "!travel", name, "] -> [", dest)
 
 
     elif "Opped" in chatlog or "De-opped" in chatlog:

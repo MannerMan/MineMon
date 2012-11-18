@@ -14,6 +14,7 @@ import achievement as achi
 mysql = database.insert()
 dbtemphax = database.temphax()
 dbworld = database.world()
+dbgateway = database.gateway()
 
 #### Actual commands ####
 
@@ -465,6 +466,241 @@ def change_world(new_world, path):
     mc_settings.close()
     mc_out.close()
 
+def gateway(name, chatlog):
+    mode = chatlog
+    mode = mode.split("> !gateway")[-1]
+    mode = mode.replace("\n", "")
+
+    #if only !gateway and nothing else, notify user about next options
+    if mode == "":
+        action.say("Possible completions:", 0.2)
+        action.say(" list", 0.2)
+        action.say(" delete", 0.2)
+        action.say(" public", 0.2)
+        action.say(" private", 0.2)
+
+    else:
+        mode = mode.split(" ")[1]
+        
+        #if !gateway list
+        if mode == "list":
+            #extract public or private
+            puborpriv = chatlog 
+            puborpriv = puborpriv.split("list")[-1]
+            
+            #if only !gateway list notify user about next options
+            if puborpriv == "":
+                action.say("Possible completions:", 0.2)
+                action.say(" public", 0.2)
+                action.say(" private", 0.2)
+            else:
+                puborpriv = puborpriv.split(" ")[1]
+
+                if puborpriv == "public":
+                    gw.list_pub()
+                elif puborpriv == "private":
+                    gw.list_priv(name)
+                else:
+                    action.say("!gateway list can only be followed by 'public' or 'private'", 0)
+
+        # or if !gateway private or public
+        elif mode == "private" or mode == "public":
+            gwname = chatlog
+            gwname = gwname.split(mode)[-1]
+            gwname = gwname.replace("\n", "")
+
+            #if only !gateway list public or private
+            if gwname == "":
+                action.say("Possible completions:", 0.2)
+                action.say(" <name of gateway>", 0)
+            else:
+                gwname = gwname.split(" ")[1]
+                
+                #check if max amount of public or private gateways have been created
+                if not gw.max_gw(mode, name):
+                    if not gw.exist(mode, name, gwname):
+                        try:
+                            coords = chatlog
+                            coords = coords.split(gwname+" ")[-1]
+                            coords = coords.replace("\n", "")
+
+                            #Get the coords
+                            x = coords
+                            x = x.split(" ")[0]
+
+                            y = coords
+                            y = y.split(" ")[1]
+                            y = y.split(" ")[-1]
+
+                            z = coords
+                            z = z.split(" ")[-1]
+                            z = z.split(" ")[-1]
+
+                            int(x)
+                            int(y)
+                            int(z)
+
+                            gw.add_gw(name, gwname, mode, x, y, z)
+                            action.say(mode+" gateway "+gwname+" was registered successfully to coordinates: "+x+" "+y+" "+z, 0)
+
+                        except:
+                            action.say("Validation of coordinates failed.", 0.2)
+                            action.say("Please only use integers in the format x z y", 0.2)
+
+                    else:
+                        action.say("That gateway already exists!", 0.2)
+                        action.say("delete it using !gateway delete "+mode+" "+gwname, 0)
+
+                else:
+                    action.say("Maximum amount of "+mode+" gateways have been registered", 0.2)
+                    action.say("Delete gateways using !gateway delete", 0)
+
+        elif mode == "delete":
+            #extract public or private
+            puborpriv = chatlog 
+            puborpriv = puborpriv.split("delete")[-1]
+            
+            #if only !gateway list notify user about next options
+            if puborpriv == "":
+                action.say("Possible completions:", 0.2)
+                action.say(" public", 0.2)
+                action.say(" private", 0.2)
+            else:
+                puborpriv = puborpriv.split(" ")[1]
+
+                if puborpriv == "public" or puborpriv == "private":
+                    gwname = chatlog
+                    gwname = gwname.split(puborpriv)[-1]
+                    gwname = gwname.replace("\n", "")
+
+                    #if only !gateway delete public or private
+                    if gwname == "":
+                        action.say("Possible completions:", 0.2)
+                        action.say(" <name of gateway>", 0)
+                    else:
+                        gwname = gwname.split(" ")[1]
+                        
+                        if gw.exist(puborpriv, name, gwname):
+                            if gw.owner(puborpriv, name, gwname):
+                                dbgateway.delete(name, gwname, puborpriv)
+                                action.say("Successfully deleted "+puborpriv+" gateway "+gwname, 0)
+                            else:
+                                action.say(puborpriv+" gateway "+gwname+" was not created by you!", 0)
+                        else:
+                            action.say(puborpriv+" gateway "+gwname+" does not exist.", 0)         
+                else:
+                    action.say("!gateway delete can only be followed by 'public' or 'private'", 0)
+
+
+        else:
+            action.say("Possible completions:", 0.2)
+            action.say(" list", 0.2)
+            action.say(" delete", 0.2)
+            action.say(" public", 0.2)
+            action.say(" private", 0.2)
+
+    #temp, fix dat shiet
+    return "test"
+
+def dial(name, chatlog):
+    gwname = chatlog
+    gwname = gwname.split("> !dial")[-1]
+    gwname = gwname.replace("\n", "")
+    if gwname == "":
+        action.say("Please provide a valid gateway", 0.2)
+        action.say("You can list your gateways using !gateway list private", 0)
+        return "NONE"
+    else:
+        gwname = gwname.split(" ")[1]
+
+        #with gwname extracted, check if private gateway exist
+        real = dbgateway.exist(name, gwname, "private")
+        if real:
+            #get coordinates
+            coords = dbgateway.get_coords(name, gwname, "private")
+            action.send("tp "+name+" "+coords['x']+" "+coords['y']+" "+coords['z'], 0)
+            dbgateway.update_used(name, gwname, "private")
+            return gwname
+
+        else:
+            action.say("That gateway does not exist!", 0)
+            return gwname
+
+def travel(name, chatlog):
+    gwname = chatlog
+    gwname = gwname.split("> !travel")[-1]
+    gwname = gwname.replace("\n", "")
+    if gwname == "":
+        action.say("Please provide a valid gateway", 0.2)
+        action.say("You can list all public gateways using !gateway list public", 0)
+        return "NONE"
+    else:
+        gwname = gwname.split(" ")[1]
+
+        #with gwname extracted, check if private gateway exist
+        real = dbgateway.exist(name, gwname, "public")
+        if real:
+            #get coordinates
+            coords = dbgateway.get_coords(name, gwname, "public")
+            action.send("tp "+name+" "+coords['x']+" "+coords['y']+" "+coords['z'], 0)
+            dbgateway.update_used(name, gwname, "public")
+            return gwname
+
+        else:
+            action.say("That gateway does not exist!", 0)
+            return gwname
+
+
+class gw:
+    def list_priv(self, name):
+        gws = dbgateway.list_priv(name)
+
+        action.say("Gateways registered to "+name+":", 0.1)
+        for tp_point in gws:
+            action.say(tp_point['name'], 0.2)
+
+    def list_pub(self):
+        gws = dbgateway.list_pub()
+
+        action.say("Public gateways available:", 0.1)
+        for tp_point in gws:
+            action.say(tp_point['name'], 0.2)
+
+    def max_gw(self, mode, name):
+        if mode == "public":
+            gws = dbgateway.list_pub()
+            if len(gws) < 10:
+                return False
+            else:
+                return True
+
+        if mode == "private":
+            gws = dbgateway.list_priv(name)
+            if len(gws) < 10:
+                return False
+            else:
+                return True
+
+    def add_gw(self, name, gwname, mode, x, y, z):
+        dbgateway.add(name, gwname, mode, x, y, z)
+
+    def owner(self, mode, name, gwname):
+        if mode == "private":
+            return True
+        else:
+            own = dbgateway.owner(name, gwname)
+            if own:
+                return True
+            else:
+                return False
+
+    def exist(self, mode, name, gwname):
+        existance = dbgateway.exist(name, gwname, mode)
+        if existance:
+            return True
+        else:
+            return False
+
 
 #this is beeing called every 5 minutes for playtime tracking
 def playtime():
@@ -516,7 +752,6 @@ class unhaxThread (threading.Thread):
         temphax_unhax(tempname)
 
 
-
-
+gw = gw()
 
 
