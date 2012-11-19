@@ -30,7 +30,6 @@ CREATE TABLE IF NOT EXISTS `gateways` (
   `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `used` int(11) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `user_id` (`user_id`,`world_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 
@@ -87,7 +86,7 @@ NULL , '!warp', 'Teleports player to public registerd gateway.', '!warp GATEWAY
 Use !help !gateway to get instructions on how to register new gateways.'
 );
 
-UPDATE version v SET v.current = 0 WHERE v.current = 1
+UPDATE version v SET v.current = 0 WHERE v.current = 1;
 
 INSERT INTO `version` (`id`, `version`, `current`, `changes`) VALUES (NULL, '3.4', '1', 'Coordination-based teleportation system added! 
 You can register private coordinates unique to you, or public, for anyone to use.
