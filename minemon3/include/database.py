@@ -342,7 +342,7 @@ class gateway():
         #get user
         user_id = get_name_id(playername)
 
-        mydb.query("INSERT INTO gateways (name, user_id, world_id, type, x, y, z) VALUES ('"+gwname+"', "+user_id+", "+world_id+", '"+mode+"', "+x+", "+y+", "+z+")")
+        mydb.query("INSERT INTO gateways (name, user_id, world_id, type, x, y, z) VALUES ('"+gwname+"', "+user_id+", "+world_id+", '"+mode+"', '"+x+"', '"+y+"', '"+z+"')")
 
         print "added: "+playername, gwname, mode, x, y, z
 
