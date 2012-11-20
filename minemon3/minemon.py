@@ -294,7 +294,7 @@ def trigger(name):
 
     elif "!update" in chatlog:
         if enabled("!update"):
-            if check_op(name, "update") or "CONSOLE" in chatlog:
+            if check_op(name, "!update") or "CONSOLE" in chatlog:
                 status = command.update(mcpath, mcport)
                 log.save2(timestamp, "SYSTEM", "!update", name, "] [", status)
 
