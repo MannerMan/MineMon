@@ -23,13 +23,15 @@ SET time_zone = "+00:00";
 CREATE TABLE IF NOT EXISTS `gateways` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(20) NOT NULL,
-  `coords` varchar(25) NOT NULL,
   `user_id` int(11) NOT NULL,
   `world_id` int(11) NOT NULL,
   `type` varchar(10) NOT NULL,
   `created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `used` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
+  `x` int(11) NOT NULL,
+  `y` int(11) NOT NULL,
+  `z` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 

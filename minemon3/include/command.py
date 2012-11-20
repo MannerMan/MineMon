@@ -141,7 +141,7 @@ def help(url, chatlog):
     command = command.split("> !help")[-1]
     command = command.replace("\n", "")
     if command == "":
-        action.say("You can use !help !COMMAND to get detailed information about a specific command", 0.2)
+        action.say("You can use !help !command_name_here to get detailed information about a specific command", 0.2)
         action.say("See all available commands at: "+url, 0)
         return "NONE"
     else:
