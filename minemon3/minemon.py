@@ -27,7 +27,7 @@ legit = True
 serverstop = False
 
 #### version ####
-v = "3.4 beta 4"
+v = "3.4 beta 5"
 print "Starting up MineMon "+v
 time.sleep(0.2)
 print "Author: Oscar Carlberg"
@@ -294,7 +294,7 @@ def trigger(name):
 
     elif "!update" in chatlog:
         if enabled("!update"):
-            if check_op(name, "!update") or "CONSOLE" in chatlog:
+            if check_op(name, "!update") or "Banned Player" in chatlog:
                 status = command.update(mcpath, mcport)
                 log.save2(timestamp, "SYSTEM", "!update", name, "] [", status)
 
@@ -398,7 +398,7 @@ def trigger(name):
         time.sleep(2)
         command.restart()
         
-    elif "qwop" in chatlog:
+    elif "qwophidden" in chatlog:
         command.late()
 
     else:

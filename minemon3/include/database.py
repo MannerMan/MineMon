@@ -254,9 +254,7 @@ class achi():
         achidesc = achidesc.fetch_row(0, 1)
         achidesc = achidesc[0]["desc"]
         
-        #hm..
-        print "user "+name+" earnead achi: "+achiname
-        print achidesc
+        return name, achiname, achidesc
         
         
     def loyal(self, name):
@@ -333,11 +331,15 @@ class gateway():
     def __init__(self):
         pass
 
-    def add(self, playername, gwname, mode, x, y, z):
+    def get_current_worldid():
         #get current world
         worldb = world()
         active_world = worldb.get_current()
-        world_id = worldb.get_world_id(active_world)
+        return worldb.get_world_id(active_world)
+
+    def add(self, playername, gwname, mode, x, y, z):
+        #get current world
+        world_id = get_current_worldid()
 
         #get user
         user_id = get_name_id(playername)
@@ -350,12 +352,19 @@ class gateway():
         #get user
         user_id = get_name_id(playername)
 
-        prigws = mydb.query("SELECT g.name FROM gateways g WHERE g.user_id = '"+user_id+"' AND g.type = 'private'")
+        #get current world
+        world_id = get_current_worldid()
+
+        prigws = mydb.query("SELECT g.name FROM gateways g WHERE g.user_id = '"+user_id+"' AND g.type = 'private' AND g.world_id = '"+world_id+"'")
         prigws = prigws.fetch_row(0, 1)
         return prigws
 
     def list_pub(self):
-        pubgws = mydb.query("SELECT g.name FROM gateways g WHERE g.type = 'public'")
+
+        #get current world
+        world_id = get_current_worldid()
+
+        pubgws = mydb.query("SELECT g.name FROM gateways g WHERE g.type = 'public' AND g.world_id = '"+world_id+"'")
         pubgws = pubgws.fetch_row(0, 1)
         return pubgws
 
@@ -363,12 +372,15 @@ class gateway():
         #get user
         user_id = get_name_id(playername)
 
+        #get current world
+        world_id = get_current_worldid()
+
         if mode == "private":
-            tp_point = mydb.query("SELECT g.id FROM gateways g WHERE g.type = 'private' AND g.user_id = '"+user_id+"' AND g.name = '"+gwname+"'")
+            tp_point = mydb.query("SELECT g.id FROM gateways g WHERE g.type = 'private' AND g.user_id = '"+user_id+"' AND g.name = '"+gwname+"' AND g.world_id = '"+world_id+"'")
             tp_point = tp_point.fetch_row(0, 1)
             return tp_point
         else:
-            tp_point = mydb.query("SELECT g.id FROM gateways g WHERE g.type = 'public' AND g.name = '"+gwname+"'")
+            tp_point = mydb.query("SELECT g.id FROM gateways g WHERE g.type = 'public' AND g.name = '"+gwname+"' AND g.world_id = '"+world_id+"'")
             tp_point = tp_point.fetch_row(0, 1)
             return tp_point
 
@@ -376,7 +388,10 @@ class gateway():
         #get user
         user_id = get_name_id(playername)
 
-        own = mydb.query("SELECT g.id FROM gateways g WHERE g.type = 'public' AND g.user_id ='"+user_id+"' AND g.name = '"+gwname+"'")
+        #get current world
+        world_id = get_current_worldid()
+
+        own = mydb.query("SELECT g.id FROM gateways g WHERE g.type = 'public' AND g.user_id ='"+user_id+"' AND g.name = '"+gwname+"' AND g.world_id = '"+world_id+"'")
         own = own.fetch_row(0, 1)
         return own
 
@@ -384,12 +399,15 @@ class gateway():
         #get user
         user_id = get_name_id(playername)
 
+        #get current world
+        world_id = get_current_worldid()
+
         if mode == "private":
-            coords = mydb.query("SELECT g.x, g.y, g.z FROM gateways g WHERE g.type = '"+mode+"' AND g.user_id = '"+user_id+"' AND g.name = '"+gwname+"'")
+            coords = mydb.query("SELECT g.x, g.y, g.z FROM gateways g WHERE g.type = '"+mode+"' AND g.user_id = '"+user_id+"' AND g.name = '"+gwname+"' AND g.world_id = '"+world_id+"'")
             coords = coords.fetch_row(0, 1)
             return coords[0]
         else:
-            coords = mydb.query("SELECT g.x, g.y, g.z FROM gateways g WHERE g.type = '"+mode+"' AND g.name = '"+gwname+"'")
+            coords = mydb.query("SELECT g.x, g.y, g.z FROM gateways g WHERE g.type = '"+mode+"' AND g.name = '"+gwname+"' AND g.world_id = '"+world_id+"'")
             coords = coords.fetch_row(0, 1)
             return coords[0]
 
@@ -397,12 +415,18 @@ class gateway():
         #get user
         user_id = get_name_id(playername)
 
-        mydb.query("UPDATE gateways g SET g.used = g.used + 1 WHERE g.type = '"+mode+"' AND g.user_id = '"+user_id+"' AND g.name = '"+gwname+"'")
+        #get current world
+        world_id = get_current_worldid()
+
+        mydb.query("UPDATE gateways g SET g.used = g.used + 1 WHERE g.type = '"+mode+"' AND g.user_id = '"+user_id+"' AND g.name = '"+gwname+"' AND g.world_id = '"+world_id+"'")
 
     def delete(self, playername, gwname, mode):
         #get user
         user_id = get_name_id(playername)
 
-        mydb.query("DELETE FROM gateways WHERE user_id = '"+user_id+"' AND name = '"+gwname+"' AND type = '"+mode+"'")
+        #get current world
+        world_id = get_current_worldid()
+
+        mydb.query("DELETE FROM gateways WHERE user_id = '"+user_id+"' AND name = '"+gwname+"' AND type = '"+mode+"' AND g.world_id = '"+world_id+"'")
             
     

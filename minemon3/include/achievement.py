@@ -1,5 +1,7 @@
 import database
 import time
+import action
+
 
 mysql = database.achi()
 
@@ -9,8 +11,11 @@ def late_gamer(name):
         pass
         #do nothing, user has achi
     else:
-        mysql.earn_achi(name, 1)
         #else, give user the achi
+        uname, aname, adesc = mysql.earn_achi(name, 1)
+        action.say(uname+" earned the achivement "+aname, 0.1)
+        action.say("\""+adesc+"\"", 0.1)
+        
 
     
     
