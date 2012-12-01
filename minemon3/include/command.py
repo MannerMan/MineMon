@@ -460,9 +460,11 @@ def change_world(new_world, path):
             action.say("\"Now, I am become Death, the destroyer of worlds.\"", 1)
             action.stop_server()
             mc_out.write("level-name="+new_world+"\n")
+            print "DEBUG: exec command: rm " + properties
             action.send_sys("rm " + properties, 0)
-            action.send_sys("mv /tmp/tempsett.txt " + properties, 0)
-            time.sleep(1)
+            print "DEBUG: exec command: mv /tmp/tempsett.txt " + properties
+            action.send_sys("mv /tmp/tempsett.txt " + properties, 1)
+            time.sleep(2)
             action.start_server()
 
     # close the file handles
