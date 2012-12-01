@@ -38,6 +38,13 @@ def check_enabled_command(command):
         #print "command: "+command+" is NOT enabled for world "+active_world
         return False
 
+def get_current_worldid():
+    #get current world
+    worldb = world()
+    active_world = worldb.get_current()
+    return worldb.get_world_id(active_world)
+
+
 def check_command_op(command):
     #This function checks if a specific command needs operator status to be ran.
 
@@ -331,11 +338,6 @@ class gateway():
     def __init__(self):
         pass
 
-    def get_current_worldid():
-        #get current world
-        worldb = world()
-        active_world = worldb.get_current()
-        return worldb.get_world_id(active_world)
 
     def add(self, playername, gwname, mode, x, y, z):
         #get current world
