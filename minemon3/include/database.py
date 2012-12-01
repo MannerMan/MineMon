@@ -429,6 +429,6 @@ class gateway():
         #get current world
         world_id = get_current_worldid()
 
-        mydb.query("DELETE FROM gateways WHERE user_id = '"+user_id+"' AND name = '"+gwname+"' AND type = '"+mode+"' AND g.world_id = '"+world_id+"'")
+        mydb.query("DELETE FROM gateways WHERE user_id = '"+user_id+"' AND name = '"+gwname+"' AND type = '"+mode+"' AND world_id = '"+world_id+"'")
             
     
