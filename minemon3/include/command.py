@@ -455,17 +455,19 @@ def change_world(new_world, path):
         if search not in line:
             mc_out.write(line)
         else:
-            action.say("§e[Warning] §fServer going down for realm-change in 10 seconds", 5)
-            action.say("§e[Warning] §fServer going down for realm-change in 5 seconds.", 5)
-            action.say("\"Now, I am become Death, the destroyer of worlds.\"", 1)
-            action.stop_server()
             mc_out.write("level-name="+new_world+"\n")
+    action.say("§e[Warning] §fServer going down for realm-change in 10 seconds", 5)
+    action.say("§e[Warning] §fServer going down for realm-change in 5 seconds.", 5)
+    action.say("\"Now, I am become Death, the destroyer of worlds.\"", 1)
+    
+    action.stop_server()
+    time.sleep(3)
     print "DEBUG: exec command: rm " + properties
     action.send_sys("rm " + properties, 0)
-    print "DEBUG: exec command: mv /tmp/tempsett.txt " + properties
-    action.send_sys("mv /tmp/tempsett.txt " + properties, 1)
-    time.sleep(2)
-    action.start_server()
+    print "DEBUG: exec command: cp /tmp/tempsett.txt " + properties
+    action.send_sys("cp /tmp/tempsett.txt " + properties, 1)
+    #time.sleep(2)
+    #action.start_server()
 
     # close the file handles
     mc_settings.close()
