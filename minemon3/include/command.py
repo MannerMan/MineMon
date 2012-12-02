@@ -288,14 +288,17 @@ def monsters(path):
                 action.stop_server()
                 mc_out.write("spawn-monsters=False\n")
                 return "OFF"
+
+    # close the file handles
+    mc_settings.close()
+    mc_out.close()
+    time.sleep(2)
     action.send_sys("rm " + properties, 0)
     action.send_sys("mv /tmp/tempsett.txt " + properties, 0)
     time.sleep(1)
     action.start_server()
 
-    # close the file handles
-    mc_settings.close()
-    mc_out.close()
+
 
 def update(path, port):
     action.say("Downloading minecraft_server...", 0)
@@ -470,9 +473,9 @@ def change_world(new_world, path):
     print "DEBUG: exec command: rm " + properties
     action.send_sys("rm " + properties, 0)
     print "DEBUG: exec command: cp /tmp/tempsett.txt " + properties
-    action.send_sys("cp /tmp/tempsett.txt " + properties, 1)
-    #time.sleep(2)
-    #action.start_server()
+    action.send_sys("mv /tmp/tempsett.txt " + properties, 1)
+    time.sleep(2)
+    action.start_server()
 
 
 def gateway(name, chatlog):
