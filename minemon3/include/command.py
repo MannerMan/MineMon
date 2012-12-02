@@ -456,6 +456,11 @@ def change_world(new_world, path):
             mc_out.write(line)
         else:
             mc_out.write("level-name="+new_world+"\n")
+
+    # close the file handles
+    mc_settings.close()
+    mc_out.close()
+
     action.say("§e[Warning] §fServer going down for realm-change in 10 seconds", 5)
     action.say("§e[Warning] §fServer going down for realm-change in 5 seconds.", 5)
     action.say("\"Now, I am become Death, the destroyer of worlds.\"", 1)
@@ -469,9 +474,6 @@ def change_world(new_world, path):
     #time.sleep(2)
     #action.start_server()
 
-    # close the file handles
-    mc_settings.close()
-    mc_out.close()
 
 def gateway(name, chatlog):
     mode = chatlog
