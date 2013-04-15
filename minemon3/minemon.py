@@ -27,7 +27,7 @@ legit = True
 serverstop = False
 
 #### version ####
-v = "3.4 beta 7"
+v = "3.4 beta 8"
 print "Starting up MineMon "+v
 time.sleep(0.2)
 print "Author: Oscar Carlberg"
@@ -199,7 +199,7 @@ def trigger(name):
                 command.map(mapurl)
                 log.save(timestamp, "SYSTEM", "!map", name)
 
-    elif "!version" in chatlog:
+    elif "!version" in chatlog and not "CONSOLE" in chatlog:
         if enabled("!version"):
             if check_op(name, "!version"):
                 command.version(v)

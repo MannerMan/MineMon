@@ -8,8 +8,14 @@ import _mysql
 def get_name_id(name):
     nameid = mydb.query("SELECT u.id FROM users u WHERE u.name ='"+name+"'")
     nameid = nameid.fetch_row(0, 1)
-    nameid = nameid[0]["id"]
-    return nameid
+    try:
+        nameid = nameid[0]["id"]
+        return nameid
+    except:
+        #if nameid cannot be extracted, return "0" as nameid
+        print "ERROR: Could not get nameid for name: " + str(name) + " - Returning nameid 0"
+        nameid = '0'
+        return nameid
 
 def get_command_id(command):
     commandid = mydb.query("SELECT c.id FROM commands c WHERE c.name ='"+command+"'")
@@ -197,14 +203,18 @@ class log():
         #get nameid
         nameid = get_name_id(name)
         
-        #get commandid
-        commandid = get_command_id(command)
-        
-        #DEBUG
-        #print "user "+ name +" with id "+nameid+" ran command "+command+" with id "+commandid
-        
-        #insert into stats_commands
-        mydb.query("INSERT INTO stats_command (user_id, command_id) VALUES ('"+nameid+"', '"+commandid+"');")
+        if nameid == '0':
+            print "Not logging stats for command: "+str(command)+" due to nameid 0"
+
+        else:
+            #get commandid
+            commandid = get_command_id(command)
+            
+            #DEBUG
+            #print "user "+ name +" with id "+nameid+" ran command "+command+" with id "+commandid
+            
+            #insert into stats_commands
+            mydb.query("INSERT INTO stats_command (user_id, command_id) VALUES ('"+nameid+"', '"+commandid+"');")
         
     def raw(self, log):
         mydb.query("INSERT INTO raw_log (log) VALUES ('"+log+"');")
@@ -212,23 +222,30 @@ class log():
     def addopt(self, command, name, option):
         #get nameid
         nameid = get_name_id(name)
-        
-        #get commandid
-        commandid = get_command_id(command)
-        
-        #insert into stats_commands
-        mydb.query("INSERT INTO stats_command (`user_id`, `command_id`, `option`) VALUES ('"+nameid+"', '"+commandid+"', '"+option+"');")
+        if nameid == '0':
+            print "Not logging stats command: "+str(command)+" due to nameid 0"
+
+        else:
+            #get commandid
+            commandid = get_command_id(command)
+            
+            #insert into stats_commands
+            mydb.query("INSERT INTO stats_command (`user_id`, `command_id`, `option`) VALUES ('"+nameid+"', '"+commandid+"', '"+option+"');")
         
         
     def chat(self, name, msg):
         #get nameid
         nameid = get_name_id(name)
-        
-        #clean chat-msg from ' etc
-        msg = _mysql.escape_string(msg)
-        
-        #insert chatmsg
-        mydb.query("INSERT INTO chat_history (name_id, msg) VALUES('"+nameid+"','"+msg+"')")
+
+        if nameid == '0':
+            print "Not logging chat: "+str(msg)+" due to nameid 0"
+
+        else:
+            #clean chat-msg from ' etc
+            msg = _mysql.escape_string(msg)
+            
+            #insert chatmsg
+            mydb.query("INSERT INTO chat_history (name_id, msg) VALUES('"+nameid+"','"+msg+"')")
         
 class achi():
     def __init__(self):
@@ -344,22 +361,27 @@ class gateway():
         world_id = get_current_worldid()
 
         #get user
-        user_id = get_name_id(playername)
+        nameid = get_name_id(playername)
+        if nameid == '0':
+            print "Not logging gateway: "+str(gwname)+" due to nameid 0"
 
-        mydb.query("INSERT INTO gateways (name, user_id, world_id, type, x, y, z) VALUES ('"+gwname+"', "+user_id+", "+world_id+", '"+mode+"', '"+x+"', '"+y+"', '"+z+"')")
-
-        print "added: "+playername, gwname, mode, x, y, z
+        else:
+            mydb.query("INSERT INTO gateways (name, user_id, world_id, type, x, y, z) VALUES ('"+gwname+"', "+nameid+", "+world_id+", '"+mode+"', '"+x+"', '"+y+"', '"+z+"')")
+            print "added: "+playername, gwname, mode, x, y, z
 
     def list_priv(self, playername):
         #get user
-        user_id = get_name_id(playername)
+        nameid = get_name_id(playername)
+        if nameid == '0':
+            print "Not listing private gateways for "+str(playername)+" due to nameid 0"
+            return "ERROR"
+        else:
+            #get current world
+            world_id = get_current_worldid()
 
-        #get current world
-        world_id = get_current_worldid()
-
-        prigws = mydb.query("SELECT g.name FROM gateways g WHERE g.user_id = '"+user_id+"' AND g.type = 'private' AND g.world_id = '"+world_id+"'")
-        prigws = prigws.fetch_row(0, 1)
-        return prigws
+            prigws = mydb.query("SELECT g.name FROM gateways g WHERE g.user_id = '"+nameid+"' AND g.type = 'private' AND g.world_id = '"+world_id+"'")
+            prigws = prigws.fetch_row(0, 1)
+            return prigws
 
     def list_pub(self):
 
@@ -415,20 +437,30 @@ class gateway():
 
     def update_used(self, playername, gwname, mode):
         #get user
-        user_id = get_name_id(playername)
+        nameid = get_name_id(playername)
 
-        #get current world
-        world_id = get_current_worldid()
+        if nameid == '0':
+            print "Not logging gateway usage for gw: "+str(gwname)+" due to nameid 0"
 
-        mydb.query("UPDATE gateways g SET g.used = g.used + 1 WHERE g.type = '"+mode+"' AND g.user_id = '"+user_id+"' AND g.name = '"+gwname+"' AND g.world_id = '"+world_id+"'")
+        else:
+
+            #get current world
+            world_id = get_current_worldid()
+
+            mydb.query("UPDATE gateways g SET g.used = g.used + 1 WHERE g.type = '"+mode+"' AND g.user_id = '"+nameid+"' AND g.name = '"+gwname+"' AND g.world_id = '"+world_id+"'")
 
     def delete(self, playername, gwname, mode):
         #get user
-        user_id = get_name_id(playername)
+        nameid = get_name_id(playername)
 
-        #get current world
-        world_id = get_current_worldid()
+        if nameid == '0':
+            print "Not deleteing gateway: "+str(gwname)+" due to nameid 0"
 
-        mydb.query("DELETE FROM gateways WHERE user_id = '"+user_id+"' AND name = '"+gwname+"' AND type = '"+mode+"' AND world_id = '"+world_id+"'")
+        else:
+
+            #get current world
+            world_id = get_current_worldid()
+
+            mydb.query("DELETE FROM gateways WHERE user_id = '"+nameid+"' AND name = '"+gwname+"' AND type = '"+mode+"' AND world_id = '"+world_id+"'")
             
     
