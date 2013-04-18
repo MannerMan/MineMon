@@ -27,7 +27,7 @@ legit = True
 serverstop = False
 
 #### version ####
-v = "3.4 beta 8"
+v = "3.4 beta 9"
 print "Starting up MineMon "+v
 time.sleep(0.2)
 print "Author: Oscar Carlberg"
@@ -141,12 +141,12 @@ def trigger(name):
                 command.sheen()
                 log.save(timestamp, "TEXT", "!sheen", name)
 
-    elif "logged in with entity" in chatlog and not "CONSOLE" in chatlog:
+    elif "logged in with entity" in chatlog and not "[Rcon]" in chatlog:
         if enabled("login_manner"):
             player = command.login(chatlog, v, helpurl)
             log.save(timestamp, "GREEN", "Login:", player)
 
-    elif "lost connection:" in chatlog and not "CONSOLE" in chatlog:
+    elif "lost connection:" in chatlog and not "[Rcon]" in chatlog:
         if enabled("logout_manner"):
             player = command.logout(chatlog)
             log.save(timestamp, "RED", "Logout:", player)
@@ -157,13 +157,13 @@ def trigger(name):
                 command.hax(name)
                 log.save(timestamp, "SYSTEM", "!hax", name)
 
-    elif "!unhax" in chatlog and not "CONSOLE" in chatlog:
+    elif "!unhax" in chatlog and not "[Rcon]" in chatlog:
         if enabled("!unhax"):
             if check_op(name, "!unhax"):
                 command.unhax(name)
                 log.save(timestamp, "SYSTEM", "!unhax", name)
 
-    elif "!adv" in chatlog and not "CONSOLE" in chatlog:
+    elif "!adv" in chatlog and not "[Rcon]" in chatlog:
         if enabled("!adv"):
             if check_op(name, "!adv"):
                 command.adv(name)
@@ -181,13 +181,13 @@ def trigger(name):
                 command.night()
                 log.save(timestamp, "SYSTEM", "!night", name)
 
-    elif "!tp" in chatlog and not "CONSOLE" in chatlog:
+    elif "!tp" in chatlog and not "[Rcon]" in chatlog:
         if enabled("!tp"):
             if check_op(name, "!tp"):
                 who = command.tp(name, chatlog)
                 log.save2(timestamp, "TEXT", "!tp", name, "] -> [", who)
 
-    elif "!pull" in chatlog and not "CONSOLE" in chatlog:
+    elif "!pull" in chatlog and not "[Rcon]" in chatlog:
         if enabled("!pull"):
             if check_op(name, "!pull"):
                 who = command.pull(name, chatlog)
@@ -199,7 +199,7 @@ def trigger(name):
                 command.map(mapurl)
                 log.save(timestamp, "SYSTEM", "!map", name)
 
-    elif "!version" in chatlog and not "CONSOLE" in chatlog:
+    elif "!version" in chatlog and not "[Rcon]" in chatlog:
         if enabled("!version"):
             if check_op(name, "!version"):
                 command.version(v)
@@ -208,67 +208,67 @@ def trigger(name):
     elif "!list" in chatlog:
         action.say("Deprecated. Press Tab on your keyboard", 0)
 
-    elif "!roll" in chatlog and not "CONSOLE" in chatlog:
+    elif "!roll" in chatlog and not "[Rcon]" in chatlog:
         if enabled("!roll"):
             if check_op(name, "!roll"):
                 roll = command.roll(name)
                 log.save2(timestamp, "TEXT", "!roll", name, "] [", roll)
 
-    elif "!rain" in chatlog and not "CONSOLE" in chatlog:
+    elif "!rain" in chatlog and not "[Rcon]" in chatlog:
         if enabled("!rain"):
             if check_op(name, "!rain"):
                 command.rain()
                 log.save(timestamp, "SYSTEM", "!rain", name)
 
-    elif "!xp" in chatlog and not "CONSOLE" in chatlog:
+    elif "!xp" in chatlog and not "[Rcon]" in chatlog:
         if enabled("!xp"):
             if check_op(name, "!xp"):
                 command.xp(name)
                 log.save(timestamp, "TEXT", "!xp", name)
 
-    elif "!kit" in chatlog and not "CONSOLE" in chatlog:
+    elif "!kit" in chatlog and not "[Rcon]" in chatlog:
         if enabled("!kit"):
             if check_op(name, "!kit"):
                 command.kit(name)
                 log.save(timestamp, "TEXT", "!kit", name)
 
-    elif "!leatherset" in chatlog and not "CONSOLE" in chatlog:
+    elif "!leatherset" in chatlog and not "[Rcon]" in chatlog:
         if enabled("!leatherset"):
             if check_op(name, "!leatherset"):
                 command.leatherset(name)
                 log.save(timestamp, "TEXT", "!leatherset", name)
 
-    elif "!diamondset" in chatlog and not "CONSOLE" in chatlog:
+    elif "!diamondset" in chatlog and not "[Rcon]" in chatlog:
         if enabled("!diamondset"):
             if check_op(name, "!diamondset"):
                 command.diamondset(name)
                 log.save(timestamp, "TEXT", "!diamondset", name)
 
-    elif "!bow" in chatlog and not "CONSOLE" in chatlog:
+    elif "!bow" in chatlog and not "[Rcon]" in chatlog:
         if enabled("!bow"):
             if check_op(name, "!bow"):
                 command.bow(name)
                 log.save(timestamp, "TEXT", "!bow", name)
 
-    elif "!train" in chatlog and not "CONSOLE" in chatlog:
+    elif "!train" in chatlog and not "[Rcon]" in chatlog:
         if enabled("!train"):
             if check_op(name, "!train"):
                 command.train(name)
                 log.save(timestamp, "TEXT", "!train", name)
 
-    elif "!sleep" in chatlog and not "CONSOLE" in chatlog:
+    elif "!sleep" in chatlog and not "[Rcon]" in chatlog:
         if enabled("!sleep"):
             if check_op(name, "!sleep"):
                 command.sleep(name)
                 log.save(timestamp, "TEXT", "!sleep", name)
 
-    elif "!rail" in chatlog and not "CONSOLE" in chatlog:
+    elif "!rail" in chatlog and not "[Rcon]" in chatlog:
         if enabled("!rail"):
             if check_op(name, "!rail"):
                 command.rail(name)
                 log.save(timestamp, "TEXT", "!rail", name)
 
-    elif "!food" in chatlog and not "CONSOLE" in chatlog:
+    elif "!food" in chatlog and not "[Rcon]" in chatlog:
         if enabled("!food"):
             if check_op(name, "!food"):
                 command.food(name)
@@ -280,7 +280,7 @@ def trigger(name):
                 item = command.item(name, chatlog)
                 log.save2(timestamp, "TEXT", "!item", name, "] [", item)
 
-    elif "!restart" in chatlog and not "CONSOLE" in chatlog:
+    elif "!restart" in chatlog and not "[Rcon]" in chatlog:
         if enabled("!restart"):
             if check_op(name, "!restart"):
                 command.restart()
@@ -298,56 +298,56 @@ def trigger(name):
                 status = command.update(mcpath, mcport)
                 log.save2(timestamp, "SYSTEM", "!update", name, "] [", status)
 
-    elif "!temphax" in chatlog and not "CONSOLE" in chatlog:
+    elif "!temphax" in chatlog and not "[Rcon]" in chatlog:
         if enabled("!temphax"):
             if check_op(name, "!temphax"):
                 who = command.temphax(chatlog)
                 log.save2(timestamp, "TEXT", "!temphax", name, "] -> [", who)
 
-    elif "!report" in chatlog and not "CONSOLE" in chatlog:
+    elif "!report" in chatlog and not "[Rcon]" in chatlog:
         if enabled("!report"):
             if check_op(name, "!report"):
                 command.mail(name, chatlog, False)
                 log.save(timestamp, "SYSTEM", "!report", name)
 
-    elif "!played" in chatlog and not "CONSOLE" in chatlog:
+    elif "!played" in chatlog and not "[Rcon]" in chatlog:
         if enabled("!played"):
             if check_op(name, "!played"):
                 command.played(name)
                 log.save(timestamp, "TEXT", "!played", name)
 
-    elif "!world" in chatlog and not "CONSOLE" in chatlog:
+    elif "!world" in chatlog and not "[Rcon]" in chatlog:
         if enabled("!world"):
             if check_op(name, "!world"):
                 success = command.world(name, chatlog, mcpath)
                 if success:
                     log.save2(timestamp, "SYSTEM", "!world", name, "] [", success)
 
-    elif "!clear" in chatlog and not "CONSOLE" in chatlog:
+    elif "!clear" in chatlog and not "[Rcon]" in chatlog:
         if enabled("!clear"):
             if check_op(name, "!clear"):
                 command.clear(name)
                 log.save(timestamp, "TEXT", "!clear", name)
 
-    elif "!spawn" in chatlog and not "CONSOLE" in chatlog:
+    elif "!spawn" in chatlog and not "[Rcon]" in chatlog:
         if enabled("!spawn"):
             if check_op(name, "!spawn"):
                 command.spawn(name)
                 log.save(timestamp, "TEXT", "!spawn", name)
 
-    elif "!gateway" in chatlog and not "CONSOLE" in chatlog:
+    elif "!gateway" in chatlog and not "[Rcon]" in chatlog:
         if enabled("!gateway"):
             if check_op(name, "!gateway"):
                 gw = command.gateway(name, chatlog)
                 log.save2(timestamp, "TEXT", "!gateway", name, gw[0], gw[1])
 
-    elif "!dial" in chatlog and not "CONSOLE" in chatlog:
+    elif "!dial" in chatlog and not "[Rcon]" in chatlog:
         if enabled("!dial"):
             if check_op(name, "!dial"):
                 dest = command.dial(name, chatlog)
                 log.save2(timestamp, "TEXT", "!dial", name, "] -> [", dest)
 
-    elif "!warp" in chatlog and not "CONSOLE" in chatlog:
+    elif "!warp" in chatlog and not "[Rcon]" in chatlog:
         if enabled("!warp"):
             if check_op(name, "!warp"):
                 dest = command.warp(name, chatlog)
