@@ -27,8 +27,8 @@ serverip = config.get('config', 'serverip')
 #### XML RPC Interface ####
 class MMClient(xmlrpc.XMLRPC):
     """
-Client objects that MMServer calls.
-"""
+    Client objects that MMServer calls.
+    """
 
     def xmlrpc_mconline(self):
         print "online"
@@ -40,8 +40,8 @@ Client objects that MMServer calls.
 
     def xmlrpc_fault(self):
         """
-Raise a Fault indicating that the procedure should not be used.
-"""
+        Raise a Fault indicating that the procedure should not be used.
+        """
         raise xmlrpc.Fault(123, "The fault procedure is faulty.")
 
 
