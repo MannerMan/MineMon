@@ -27,8 +27,8 @@ serverip = config.get('config', 'serverip')
 #### XML RPC Interface ####
 class MMClient(xmlrpc.XMLRPC):
     """
-    Client objects that MMServer calls.
-    """
+Client objects that MMServer calls.
+"""
 
     def xmlrpc_mconline(self):
         print "online"
@@ -40,8 +40,8 @@ class MMClient(xmlrpc.XMLRPC):
 
     def xmlrpc_fault(self):
         """
-        Raise a Fault indicating that the procedure should not be used.
-        """
+Raise a Fault indicating that the procedure should not be used.
+"""
         raise xmlrpc.Fault(123, "The fault procedure is faulty.")
 
 
@@ -52,11 +52,11 @@ def analyze(log):
 
 #### Follow the log ####
 def follow(thefile):
-    thefile.seek(0,2)      # Go to the end of the file
+    thefile.seek(0,2) # Go to the end of the file
     while True:
          line = thefile.readline()
          if not line:
-             time.sleep(0.05)    # Sleep briefly
+             time.sleep(0.05) # Sleep briefly
              continue
          yield line
 

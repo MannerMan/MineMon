@@ -1,8 +1,14 @@
 import time
 import xmlrpclib
 
-proxy = {'mmuser':xmlrpclib.ServerProxy("http://localhost:7090"), 'mm_2011':xmlrpclib.ServerProxy("http://localhost:7091")}
+mmclient = {}
 
-def say(msg, wait, server):
-	proxy[server].say("["+server+"] Say:" +msg)
+### startup load
+def load(mmclients):
+	global mmclient
+  	for clientid in mmclients:
+  		mmclient[clientid]=xmlrpclib.ServerProxy("http://"+mmclients[clientid]['ip']+":"+mmclients[clientid]['port'])
+
+def say(msg, wait, clientid):
+	mmclient[clientid].msg("["+clientid+"] Say:" +msg)
 	time.sleep(wait)

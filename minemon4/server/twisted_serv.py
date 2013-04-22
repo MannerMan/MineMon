@@ -19,6 +19,7 @@ from twisted.web import xmlrpc, server
 #import include.action as action
 import include.command as command
 import include.database as database
+import include.action as action
 
 #### code start ####
 legit = True
@@ -40,6 +41,20 @@ myhost = config.get('config', 'mysqlhost')
 myuser = config.get('config', 'mysqluser')
 mypass = config.get('config', 'mysqlpass')
 database.settings(myhost, myuser, mypass)
+
+clients = {}
+
+for s in config.sections():
+    if s.startswith('client:'):
+        alias = s[7:]
+        clientdata = dict(config.items(s))
+        #clientdata['alias'] = alias
+
+        clients[alias] = clientdata
+
+print clients
+action.load(clients)
+database.load(clients)
 
 class MMCore(xmlrpc.XMLRPC):
     """
@@ -86,7 +101,6 @@ if __name__ == '__main__':
     core = MMCore()
     reactor.listenTCP(7080, server.Site(core))
     reactor.run()
-
 
 #client
 
