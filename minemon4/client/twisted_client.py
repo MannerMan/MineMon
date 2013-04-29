@@ -40,7 +40,11 @@ class MMClient(xmlrpc.XMLRPC):
         return "OK"
 
     def xmlrpc_say(self, msg):
-        print "send2mc: "+msg
+        log = "["+current_date()+"] ["+current_time()+"] [Say] ["+msg+"]"
+        print log
+
+        #log the command
+        write2comlog(log)
 
         #log the request
         log_xmlrpc.recieved("say", [msg])
@@ -57,20 +61,36 @@ class MMClient(xmlrpc.XMLRPC):
 #### XML RPC 2 Server ####
 mmserver=xmlrpclib.ServerProxy("http://"+serverip+":"+serverport)
 
-def write2log(msg):
-    with open('logs/xmlrpc_log_'+alias+'.log', 'a') as file:
-        file.write(msg+"\n")
+#### Logging ####
+
+def write2comlog(msg):
+    try:
+        with open('logs/command_'+alias+'.log', 'a') as file:
+            file.write(msg+"\n")
+    except:
+        os.system('touch logs/command_'+alias+'.log')
+        with open('logs/command_'+alias+'.log', 'a') as file:
+            file.write(msg+"\n")
+
+def write2xmllog(msg):
+    try:
+        with open('logs/xmlrpc_'+alias+'.log', 'a') as file:
+            file.write(msg+"\n")
+    except:
+        os.system('touch logs/xmlrpc_'+alias+'.log')
+        with open('logs/xmlrpc_'+alias+'.log', 'a') as file:
+            file.write(msg+"\n")
 
 class log_xmlrpc:
     def recieved(self, req, parameters):
         parameters = ' | '.join(parameters)
         
-        write2log("["+ current_date() +"] ["+current_time()+"] [XMLRPC] [<<<] [INCOMING] ["+req+"] ["+parameters+"]")
+        write2xmllog("["+ current_date() +"] ["+current_time()+"] [XMLRPC] [<--] [INCOMING] ["+req+"] ["+parameters+"]")
 
     def sent(self, req, parameters):
         parameters = ' | '.join(parameters)
         
-        write2log("["+ current_date() +"] ["+current_time()+"] [XMLRPC] [>>>] [OUTGOING] ["+req+"] ["+parameters+"]")
+        write2xmllog("["+ current_date() +"] ["+current_time()+"] [XMLRPC] [-->] [OUTGOING] ["+req+"] ["+parameters+"]")
 
 log_xmlrpc = log_xmlrpc()
 
