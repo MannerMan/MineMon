@@ -10,5 +10,5 @@ def load(mmclients):
   		mmclient[clientid]=xmlrpclib.ServerProxy("http://"+mmclients[clientid]['ip']+":"+mmclients[clientid]['port'])
 
 def say(msg, wait, clientid):
-	mmclient[clientid].say("["+clientid+"] Say:" +msg)
+	mmclient[clientid].say("Say:" +msg)
 	time.sleep(wait)
