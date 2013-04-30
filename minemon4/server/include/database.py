@@ -4,12 +4,17 @@ import select
 import struct
 import re
 import _mysql
+dbinfo = ''
 
 ### startup load
 def load(mmclients):
     global dbinfo
     dbinfo = mmclients
-    
+    myconn = {}
+    for n in dbinfo:
+        db=_mysql.connect('localhost', 'root', 'examplepw')
+        myconn[n] = db 
+    print myconn    
 
 ### Database connection ###
 def settings(myhost, myuser, mypass):
@@ -31,6 +36,7 @@ def reconnect():
 
 class database():
     def connect(self):
+
         self.db=_mysql.connect(dbhost,user,passwd)
         self.db.set_character_set('utf8')
         print "connected to mysql"
