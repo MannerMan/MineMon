@@ -36,9 +36,10 @@ class database():
         print "connected to mysql"
         
     def query(self, que):
-        try:
-            self.db.query(que)
-            return self.db.store_result()
+        #try:
+        self.db.query(que)
+        return self.db.store_result()
+        """
         except:
             print "Unable to reach MYSQL, reconnecting"
             reconnect()
@@ -46,6 +47,7 @@ class database():
             print "trying query again"
             self.db.query(que)
             return self.db.store_result()
+        """
 
 data = database()
 

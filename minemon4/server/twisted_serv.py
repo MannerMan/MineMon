@@ -27,7 +27,7 @@ legit = True
 serverstop = False
 
 #### version ####
-v = "4.0 Alpha 3"
+v = "4.0 Alpha 4"
 print "Starting up MineMon "+v
 time.sleep(0.2)
 print "Author: Oscar Carlberg"
@@ -66,7 +66,9 @@ class MMCore(xmlrpc.XMLRPC):
         #Log the request
         log_xmlrpc.recieved("login", [server, player], server)
 
-        command.login(player, v, server)
+        RunCommand = RunCommandThread(command.login, player, v, server)
+        RunCommand.start()
+        #t1.join()
 
         #Log the command
         logger.save(server, "GREEN", "LOGIN", player)
@@ -77,7 +79,8 @@ class MMCore(xmlrpc.XMLRPC):
         #Log the request
         log_xmlrpc.recieved("logout", [server, player], server)
 
-        command.logout(player, server)
+        RunCommand = RunCommandThread(command.logout, player, server)
+        RunCommand.start()
 
         #Log the command
         logger.save(server, "RED", "LOGOUT", player)
@@ -109,12 +112,46 @@ class MMCore(xmlrpc.XMLRPC):
         """
         raise xmlrpc.Fault(123, "The fault procedure is faulty.")
 
+
+
+### Threads ####
+class RunCommandThread (threading.Thread):
+    def __init__(self, target, *args):
+        self._target = target
+        self._args = args
+        threading.Thread.__init__(self)
+ 
+    def run(self):
+        self._target(*self._args)
+
 if __name__ == '__main__':
     from twisted.internet import reactor
     core = MMCore()
     reactor.listenTCP(7080, server.Site(core))
     reactor.run()
 
+
+"""
+import threading
+ 
+class FuncThread(threading.Thread):
+    def __init__(self, target, *args):
+        self._target = target
+        self._args = args
+        threading.Thread.__init__(self)
+ 
+    def run(self):
+        self._target(*self._args)
+ 
+# Example usage
+def someOtherFunc(data, key):
+    print "someOtherFunc was called : data=%s; key=%s" % (str(data), str(key))
+ 
+t1 = FuncThread(someOtherFunc, [1,2], 6)
+t1.start()
+t1.join()
+
+"""
 #client
 
 #online
