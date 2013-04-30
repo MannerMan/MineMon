@@ -16,6 +16,7 @@ import socket
 from twisted.web import xmlrpc, server
 from twisted.internet.threads import deferToThread
 import xmlrpclib
+import io
 
 #### Load settings ####
 setting_file = sys.argv[1]
@@ -40,14 +41,16 @@ class MMClient(xmlrpc.XMLRPC):
         return "OK"
 
     def xmlrpc_say(self, msg):
+        #log the request
+        log_xmlrpc.recieved("say", [msg])
+        
         log = "["+current_date()+"] ["+current_time()+"] [Say] ["+msg+"]"
         print log
 
         #log the command
         write2comlog(log)
 
-        #log the request
-        log_xmlrpc.recieved("say", [msg])
+
 
         return "OK"
 
@@ -64,21 +67,28 @@ mmserver=xmlrpclib.ServerProxy("http://"+serverip+":"+serverport)
 #### Logging ####
 
 def write2comlog(msg):
+    uni = type(msg)
+    if uni == str:
+        msg = unicode(msg, "utf-8")
     try:
-        with open('logs/command_'+alias+'.log', 'a') as file:
+        with io.open('logs/command_'+alias+'.log', 'a', encoding='utf-8') as file:
             file.write(msg+"\n")
     except:
         os.system('touch logs/command_'+alias+'.log')
-        with open('logs/command_'+alias+'.log', 'a') as file:
+        with io.open('logs/command_'+alias+'.log', 'a', encoding='utf-8') as file:
             file.write(msg+"\n")
 
 def write2xmllog(msg):
+    uni = type(msg)
+    if uni == str:
+        msg = unicode(msg, "utf-8")
+
     try:
-        with open('logs/xmlrpc_'+alias+'.log', 'a') as file:
+        with io.open('logs/xmlrpc_'+alias+'.log', 'a', encoding='utf-8') as file:
             file.write(msg+"\n")
     except:
         os.system('touch logs/xmlrpc_'+alias+'.log')
-        with open('logs/xmlrpc_'+alias+'.log', 'a') as file:
+        with io.open('logs/xmlrpc_'+alias+'.log', 'a', encoding='utf-8') as file:
             file.write(msg+"\n")
 
 class log_xmlrpc:

@@ -53,8 +53,6 @@ def login(player, v, server):
     #check for 100 logins achi
     achi.loyal_cust(name)
     """
-    #return name for logging
-    return player
 
 def logout(player, server):
 

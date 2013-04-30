@@ -1,5 +1,8 @@
 import time
 import xmlrpclib
+import logger
+
+log_xmlrpc = logger.log_xmlrpc()
 
 mmclient = {}
 
@@ -11,4 +14,8 @@ def load(mmclients):
 
 def say(msg, wait, clientid):
 	mmclient[clientid].say(msg)
+
+	#Log the request
+	log_xmlrpc.sent("say", [clientid, msg], clientid)
+
 	time.sleep(wait)
