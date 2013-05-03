@@ -21,7 +21,7 @@ def login(player, v, server):
     hail = (hello[greetnum])
 
     #temp
-    time.sleep(5)
+    #time.sleep(5)
     action.say(hail+player, 0, server)
     mysql.login(player, v, server)
 
@@ -57,7 +57,7 @@ def login(player, v, server):
     """
 
 def logout(player, server):
-    time.sleep(10)
+    #time.sleep(10)
     #say goodbye & return nick for logg
     action.say("§cGoodbye " + player + " !", 0, server)
     mysql.logout(player, server)

@@ -70,9 +70,8 @@ class MMCore(xmlrpc.XMLRPC):
         #Log the request
         log_xmlrpc.recieved("login", [server, player], server)
 
-        RunCommand = RunCommandThread(que[server], command.login, player, v, server)
+        RunCommand = RunCommandThread(command.login, player, v, server)
         RunCommand.start()
-        RunCommand.join()
 
         #Log the command
         logger.save(server, "GREEN", "LOGIN", player)
@@ -83,9 +82,8 @@ class MMCore(xmlrpc.XMLRPC):
         #Log the request
         log_xmlrpc.recieved("logout", [server, player], server)
 
-        RunCommand = RunCommandThread(que[server], command.logout, player, server)
+        RunCommand = RunCommandThread(command.logout, player, server)
         RunCommand.start()
-        que[server].join()
 
         #Log the command
         logger.save(server, "RED", "LOGOUT", player)
@@ -121,11 +119,10 @@ class MMCore(xmlrpc.XMLRPC):
 
 ### Threads ####
 class RunCommandThread (threading.Thread):
-    def __init__(self, queue, target, *args):
+    def __init__(self, target, *args):
         self._target = target
         self._args = args
         threading.Thread.__init__(self)
-        self.queue = queue
  
     def run(self):
         self._target(*self._args)
