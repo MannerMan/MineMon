@@ -167,7 +167,7 @@ def follow(thefile):
          yield line
 
 def read_log():
-    logfile = open("/home/oscar/mcserv/server.log")
+    logfile = open("/home/oscar/mcserv/server2.log")
     loglines = follow(logfile)
     for line in loglines:
         stamp = datetime.now()

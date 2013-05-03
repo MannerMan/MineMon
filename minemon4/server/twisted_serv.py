@@ -14,6 +14,7 @@ import filecmp
 import ConfigParser
 import socket
 from twisted.web import xmlrpc, server
+import Queue
 
 #my stuff will go here
 #import include.action as action
@@ -44,6 +45,7 @@ mypass = config.get('config', 'mysqlpass')
 database.settings(myhost, myuser, mypass)
 
 clients = {}
+que = {}
 
 for s in config.sections():
     if s.startswith('client:'):
@@ -51,11 +53,13 @@ for s in config.sections():
         clientdata = dict(config.items(s))
 
         clients[alias] = clientdata
+        que[alias] = Queue.Queue()
 
 print clients
 action.load(clients)
 database.load(clients)
 log_xmlrpc = logger.log_xmlrpc()
+
 
 class MMCore(xmlrpc.XMLRPC):
     """
@@ -66,9 +70,9 @@ class MMCore(xmlrpc.XMLRPC):
         #Log the request
         log_xmlrpc.recieved("login", [server, player], server)
 
-        RunCommand = RunCommandThread(command.login, player, v, server)
+        RunCommand = RunCommandThread(que[server], command.login, player, v, server)
         RunCommand.start()
-        #t1.join()
+        RunCommand.join()
 
         #Log the command
         logger.save(server, "GREEN", "LOGIN", player)
@@ -79,8 +83,9 @@ class MMCore(xmlrpc.XMLRPC):
         #Log the request
         log_xmlrpc.recieved("logout", [server, player], server)
 
-        RunCommand = RunCommandThread(command.logout, player, server)
+        RunCommand = RunCommandThread(que[server], command.logout, player, server)
         RunCommand.start()
+        que[server].join()
 
         #Log the command
         logger.save(server, "RED", "LOGOUT", player)
@@ -112,17 +117,19 @@ class MMCore(xmlrpc.XMLRPC):
         """
         raise xmlrpc.Fault(123, "The fault procedure is faulty.")
 
-
+#queue = Queue.Queue()
 
 ### Threads ####
 class RunCommandThread (threading.Thread):
-    def __init__(self, target, *args):
+    def __init__(self, queue, target, *args):
         self._target = target
         self._args = args
         threading.Thread.__init__(self)
+        self.queue = queue
  
     def run(self):
         self._target(*self._args)
+
 
 if __name__ == '__main__':
     from twisted.internet import reactor
