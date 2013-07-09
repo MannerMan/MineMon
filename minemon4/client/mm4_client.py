@@ -23,6 +23,8 @@ setting_file = sys.argv[1]
 config = ConfigParser.RawConfigParser()
 config.read(setting_file)
 
+debug = True
+
 alias = config.get('config', 'alias')
 port = config.get('config', 'port')
 serverip = config.get('config', 'serverip')

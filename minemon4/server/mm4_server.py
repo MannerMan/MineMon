@@ -38,6 +38,8 @@ setting_file = sys.argv[1]
 config = ConfigParser.RawConfigParser()
 config.read(setting_file)
 
+debug = True
+
 #### Connect to MySQL ####
 myhost = config.get('config', 'mysqlhost')
 myuser = config.get('config', 'mysqluser')

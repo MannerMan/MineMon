@@ -27,7 +27,7 @@ legit = True
 serverstop = False
 
 #### version ####
-v = "3.4 beta 9"
+v = "3.4 beta 10"
 print "Starting up MineMon "+v
 time.sleep(0.2)
 print "Author: Oscar Carlberg"
@@ -124,6 +124,27 @@ def check_op(name, command):
         #if not, deny.
         else:
             action.say("This command is not allowed for non-op's.", 0)
+
+def nick_washer(nick):
+    if "§" in nick:
+        nick = nick.replace("§1", "")
+        nick = nick.replace("§2", "")
+        nick = nick.replace("§3", "")
+        nick = nick.replace("§4", "")
+        nick = nick.replace("§5", "")
+        nick = nick.replace("§6", "")
+        nick = nick.replace("§7", "")
+        nick = nick.replace("§8", "")
+        nick = nick.replace("§9", "")
+        nick = nick.replace("§a", "")
+        nick = nick.replace("§b", "")
+        nick = nick.replace("§c", "")
+        nick = nick.replace("§d", "")
+        nick = nick.replace("§e", "")
+        nick = nick.replace("§f", "")
+        nick_washer(nick)
+    else:
+        return nick
 
 #### Trigger on chattlog stuff ####
 def trigger(name):
@@ -391,12 +412,13 @@ def trigger(name):
     elif "!tnt" in chatlog or "!stone" in chatlog or "!wood" in chatlog or "!dirt" in chatlog:
         action.say("Deprecated command. use !hax or !item", 0)
 
-    elif "[SEVERE]" in chatlog or "(SourceFile:" in chatlog and not "<" in chatlog:
-        command.mail("SYSTEM", "MINECRAFT SEVERE EXCEPTION - TRYING TO RESTART", True)
-        action.say("§c[FATAL]: Minecraft Server encountered a serious error.", 4)
-        action.say("§c[WARNING] MineMon will try to restart the server as a precaution", 3)
-        time.sleep(2)
-        command.restart()
+# Un-commented since mc console now logs severe @ disconnect
+#    elif "[SEVERE]" in chatlog or "(SourceFile:" in chatlog and not "<" in chatlog:
+#        command.mail("SYSTEM", "MINECRAFT SEVERE EXCEPTION - TRYING TO RESTART", True)
+#        action.say("§c[FATAL]: Minecraft Server encountered a serious error.", 4)
+#        action.say("§c[WARNING] MineMon will try to restart the server as a precaution", 3)
+#        time.sleep(2)
+#        command.restart()
         
     elif "qwophidden" in chatlog:
         command.late()
@@ -422,6 +444,7 @@ def func_checkLastLine(lastLine):
     chatlog = lastLine.replace("\n", "")
     timestamp = datetime.now()
     name = extract_name(lastLine)
+    name = nick_washer(name)
     trigger(name)
 
 #### start of S3rR1 hax, i dont even what is this ####
