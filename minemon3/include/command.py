@@ -62,13 +62,14 @@ def login(chatlog, v, helpurl):
     action.say("§a"+hail + name + "! Online: " + online, 0)
     mysql.login(name, v)
 
+    #Currently not working
     #check if a new MM version was deployed since last visit.
-    vermatch = mysql.version(name, v)
-    if vermatch:
-        time.sleep(1)
-        action.say("§bA §cnew version§b of MineMon was deployed since your last visit!", 2)
-        action.say("§bUse §c!version§b for a summary of changes", 0.2)
-        mysql.upd_version(name, v)
+    #vermatch = mysql.version(name, v)
+    #if vermatch:
+    #    time.sleep(1)
+    #    action.say("§bA §cnew version§b of MineMon was deployed since your last visit!", 2)
+    #    action.say("§bUse §c!version§b for a summary of changes", 0.2)
+    #    mysql.upd_version(name, v)
 
     #check if user was temphaxed
     temphax_check(name)
