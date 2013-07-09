@@ -39,7 +39,7 @@ def login(chatlog, v, helpurl):
     #get nick
     name = chatlog
     name = name[27:]
-    bort = '['
+    bort = ' joined'
     name = name.split(bort, 1)[0]
 
     #Choose greeting
