@@ -162,12 +162,12 @@ def trigger(name):
                 command.sheen()
                 log.save(timestamp, "TEXT", "!sheen", name)
 
-    elif "logged in with entity" in chatlog and not "[Rcon]" in chatlog:
+    elif "joined the game" in chatlog and not "[Rcon]" in chatlog:
         if enabled("login_manner"):
             player = command.login(chatlog, v, helpurl)
             log.save(timestamp, "GREEN", "Login:", player)
 
-    elif "lost connection:" in chatlog and not "[Rcon]" in chatlog:
+    elif "left the game" in chatlog and not "[Rcon]" in chatlog:
         if enabled("logout_manner"):
             player = command.logout(chatlog)
             log.save(timestamp, "RED", "Logout:", player)
