@@ -121,34 +121,40 @@ class MCRcon:
         in_data = ''
         ready = True
         while ready:
-            #Receive an item
-            tmp_len, tmp_req_id, tmp_type = struct.unpack('<iii', self.s.recv(12))
-            tmp_data = self.s.recv(tmp_len-8) #-8 because we've already read the 2nd and 3rd integer fields
+            try:
+                #Receive an item
+                tmp_len, tmp_req_id, tmp_type = struct.unpack('<iii', self.s.recv(12))
+                tmp_data = self.s.recv(tmp_len-8) #-8 because we've already read the 2nd and 3rd integer fields
 
-            #Error checking
-            if tmp_data[-2:] != '\x00\x00':
-                raise Exception('protocol failure', 'non-null pad bytes')
-            tmp_data = tmp_data[:-2]
+                #Error checking
+                if tmp_data[-2:] != '\x00\x00':
+                    raise Exception('protocol failure', 'non-null pad bytes')
+                tmp_data = tmp_data[:-2]
 
-            #if tmp_type != out_type:
-            #    raise Exception('protocol failure', 'type mis-match', tmp_type, out_type)
+                #if tmp_type != out_type:
+                #    raise Exception('protocol failure', 'type mis-match', tmp_type, out_type)
 
-            if tmp_req_id == -1:
-                raise Exception('auth failure')
+                if tmp_req_id == -1:
+                    raise Exception('auth failure')
 
-            m = re.match('^Error executing: %s \((.*)\)$' % out_data, tmp_data)
-            if m:
-                raise Exception('command failure', m.group(1))
+                m = re.match('^Error executing: %s \((.*)\)$' % out_data, tmp_data)
+                if m:
+                    raise Exception('command failure', m.group(1))
 
-            #Append
-            in_data += tmp_data
+                #Append
+                in_data += tmp_data
 
 
-            #Check if more data ready...
-            ready = select.select([self.s], [], [], 0)[0]
+                #Check if more data ready...
+                ready = select.select([self.s], [], [], 0)[0]
 
-            if out_type == 2:
-                pass
-                #extrct(in_data)
+                if out_type == 2:
+                    pass
+                    #extrct(in_data)
+            except:
+                print "failed while reciving from rcon"
+                print "Tried to send this:" + out_data
+                print "however got nothing back."
+                in_data = "FAILED"
 
         return in_data
