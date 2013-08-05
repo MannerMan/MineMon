@@ -27,7 +27,7 @@ legit = True
 serverstop = False
 
 #### version ####
-v = "3.4 beta 10"
+v = "3.4 beta 11"
 print "Starting up MineMon "+v
 time.sleep(0.2)
 print "Author: Oscar Carlberg"
@@ -126,7 +126,7 @@ def check_op(name, command):
             action.say("This command is not allowed for non-op's.", 0)
 
 def nick_washer(nick):
-    if "§" in nick:
+    while "§" in nick:
         nick = nick.replace("§1", "")
         nick = nick.replace("§2", "")
         nick = nick.replace("§3", "")
@@ -142,9 +142,11 @@ def nick_washer(nick):
         nick = nick.replace("§d", "")
         nick = nick.replace("§e", "")
         nick = nick.replace("§f", "")
-        nick_washer(nick)
-    else:
-        return nick
+	nick = nick.replace("§r", "")
+
+    print "Washed: "+nick
+    return nick
+
 
 #### Trigger on chattlog stuff ####
 def trigger(name):
@@ -334,6 +336,7 @@ def trigger(name):
     elif "!played" in chatlog and not "[Rcon]" in chatlog:
         if enabled("!played"):
             if check_op(name, "!played"):
+		print "Checking played with name:"+ str(name)
                 command.played(name)
                 log.save(timestamp, "TEXT", "!played", name)
 
@@ -445,6 +448,7 @@ def func_checkLastLine(lastLine):
     timestamp = datetime.now()
     name = extract_name(lastLine)
     name = nick_washer(name)
+    print "running trigger on name: "+str(name)
     trigger(name)
 
 #### start of S3rR1 hax, i dont even what is this ####
