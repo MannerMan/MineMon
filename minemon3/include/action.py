@@ -67,10 +67,15 @@ def load_op(mcpath):
     #ops = opfile.read()
 
     json_data = json.load(opfile)
-    print(json_data)
-    ops = 'none'
 
-    return ops
+    op_list = []
+
+    for data in json_data:
+        op_list.append(data['name'])
+
+    print "debug:", op_list
+
+    return op_list
     #print ops
 
 def send_sys(command, time):
