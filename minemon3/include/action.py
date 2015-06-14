@@ -66,7 +66,7 @@ def load_op(mcpath):
     opfile = open(opath, 'r')
     #ops = opfile.read()
 
-    json_data = json.load(json_file)
+    json_data = json.load(opfile)
     print(json_data)
     ops = 'none'
 
