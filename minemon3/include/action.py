@@ -8,6 +8,7 @@ import smtplib
 from email.mime.text import MIMEText
 import os
 import sys
+import json
 
 
 def load(mail, pw, sendto, screen, mc_mem):
