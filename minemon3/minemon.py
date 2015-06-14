@@ -435,7 +435,7 @@ def trigger(name):
 #### Name extractor
 def extract_name(player):
     # extrahera namn
-    player = player[28:]
+    player = player[34:]
     bort = '>'
     player = player.split(bort, 1)[0]
     return player
