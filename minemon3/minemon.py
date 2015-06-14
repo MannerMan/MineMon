@@ -27,7 +27,7 @@ legit = True
 serverstop = False
 
 #### version ####
-v = "3.4 beta 11"
+v = "3.6-revival"
 print "Starting up MineMon "+v
 time.sleep(0.2)
 print "Author: Oscar Carlberg"
@@ -422,7 +422,7 @@ def trigger(name):
 #        action.say("§c[WARNING] MineMon will try to restart the server as a precaution", 3)
 #        time.sleep(2)
 #        command.restart()
-        
+
     elif "qwophidden" in chatlog:
         command.late()
 
@@ -478,7 +478,7 @@ def func_getLastLine():
 
 #### Start application
 running = True
-logfile = mcpath + "server.log"
+logfile = mcpath + "logs/latest.log"
 
 fileHandle = open(logfile, 'r')
 fileList = fileHandle.readlines()
