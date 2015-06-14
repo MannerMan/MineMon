@@ -738,14 +738,14 @@ def playtime():
         online = online[5:]
         online = online.split("players online:")[-1]
         online = online.split()
-        print online
+        #print online
         if not online:
             pass
             #print "NO USERS ONLINE"
         else:
             for user in online:
-                pass
-                #mysql.playtime(user)
+                #pass
+                mysql.playtime(user)
 
         #Return OK
         return True
