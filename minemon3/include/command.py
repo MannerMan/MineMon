@@ -76,7 +76,7 @@ def login(chatlog, v, helpurl):
 
     #check for 100 logins achi
     achi.loyal_cust(name)
-    
+
     return name
 
 def logout(chatlog):
@@ -468,7 +468,7 @@ def change_world(new_world, path):
     action.say("§e[Warning] §fServer going down for realm-change in 10 seconds", 5)
     action.say("§e[Warning] §fServer going down for realm-change in 5 seconds.", 5)
     action.say("\"Now, I am become Death, the destroyer of worlds.\"", 1)
-    
+
     action.stop_server()
     time.sleep(3)
     print "DEBUG: exec command: rm " + properties
@@ -495,13 +495,13 @@ def gateway(name, chatlog):
 
     else:
         mode = mode.split(" ")[1]
-        
+
         #if !gateway list
         if mode == "list":
             #extract public or private
-            puborpriv = chatlog 
+            puborpriv = chatlog
             puborpriv = puborpriv.split("list")[-1]
-            
+
             #if only !gateway list notify user about next options
             if puborpriv == "":
                 action.say("Possible completions:", 0.2)
@@ -534,7 +534,7 @@ def gateway(name, chatlog):
                 return "] "+mode+" [", "NONE"
             else:
                 gwname = gwname.split(" ")[1]
-                
+
                 #check if max amount of public or private gateways have been created
                 if not gw.max_gw(mode, name):
                     if not gw.exist(mode, name, gwname):
@@ -580,9 +580,9 @@ def gateway(name, chatlog):
 
         elif mode == "delete":
             #extract public or private
-            puborpriv = chatlog 
+            puborpriv = chatlog
             puborpriv = puborpriv.split("delete")[-1]
-            
+
             #if only !gateway list notify user about next options
             if puborpriv == "":
                 action.say("Possible completions:", 0.2)
@@ -604,7 +604,7 @@ def gateway(name, chatlog):
                         return "] delete "+puborpriv+" [", "NONE"
                     else:
                         gwname = gwname.split(" ")[1]
-                        
+
                         if gw.exist(puborpriv, name, gwname):
                             if gw.owner(puborpriv, name, gwname):
                                 dbgateway.delete(name, gwname, puborpriv)
@@ -614,8 +614,8 @@ def gateway(name, chatlog):
                                 action.say(puborpriv+" gateway "+gwname+" was not created by you!", 0)
                                 return "] delete "+puborpriv+" [", gwname
                         else:
-                            action.say(puborpriv+" gateway "+gwname+" does not exist.", 0)    
-                            return "] delete "+puborpriv+" [", gwname     
+                            action.say(puborpriv+" gateway "+gwname+" does not exist.", 0)
+                            return "] delete "+puborpriv+" [", gwname
                 else:
                     action.say("!gateway delete can only be followed by 'public' or 'private'", 0)
                     return "] delete "+puborpriv+" [", "NONE"
@@ -738,12 +738,14 @@ def playtime():
         online = online[5:]
         online = online.split("players online:")[-1]
         online = online.split()
+        print online
         if not online:
             pass
             #print "NO USERS ONLINE"
         else:
             for user in online:
-                mysql.playtime(user)
+                pass
+                #mysql.playtime(user)
 
         #Return OK
         return True
@@ -752,7 +754,7 @@ def playtime():
 
         #Return false, will result in timetrack-module shutdown.
         return False
-            
+
 # this is beeing called when server goes down at the night, for achivement
 def late():
     #check who's online
@@ -780,5 +782,3 @@ class unhaxThread (threading.Thread):
 
 
 gw = gw()
-
-
