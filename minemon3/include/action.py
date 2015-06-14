@@ -61,14 +61,14 @@ def send(command, wait):
     return status
 
 def load_op(mcpath):
-    opath = mcpath + 'ops.txt'
+    opath = mcpath + 'ops.json'
     opfile = open(opath, 'r')
     #ops = opfile.read()
 
     json_data = json.load(json_file)
     print(json_data)
     ops = 'none'
-    
+
     return ops
     #print ops
 
