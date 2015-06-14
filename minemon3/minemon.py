@@ -144,7 +144,7 @@ def nick_washer(nick):
         nick = nick.replace("§f", "")
 	nick = nick.replace("§r", "")
 
-    print "Washed: "+nick
+    #print "Washed: "+nick
     return nick
 
 
@@ -448,7 +448,7 @@ def func_checkLastLine(lastLine):
     timestamp = datetime.now()
     name = extract_name(lastLine)
     name = nick_washer(name)
-    print "running trigger on name: "+str(name)
+    #print "running trigger on name: "+str(name)
     trigger(name)
 
 #### start of S3rR1 hax, i dont even what is this ####
